@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FilmManagerCore.Models
+{
+    [DataContract]
+    public class Film
+    {
+        [DataMember]
+        public int FilmId { get; internal set; }
+        [DataMember]
+        public string OriginalName { get; set; }
+        [DataMember]
+        public string LocalName { get; set; }
+        [DataMember]
+        public int? Year { get; set; }
+        [DataMember]
+        public DateTime AddingDate { get; protected set; }
+        [DataMember]
+        public string Description { get; set; }
+        [DataMember]
+        public string PosterUrl { get; set; }
+        [DataMember]
+        public int? SelfRating { get; set; }
+        [DataMember]
+        public float? GlobalRating { get; set; }
+        [DataMember]
+        public string ForeignUrl { get; set; }
+        [DataMember]
+        public ICollection<Genre> Genres { get; set; }
+        public Film()
+        {
+            Genres = new List<Genre>();
+        }
+    }
+}

@@ -16,7 +16,7 @@ namespace FilmDataLayer.Contexts
 
         public FilmsContext(string connectionString) : base(new SQLiteConnection(connectionString), true)
         {
-            //var conf = new SqliteDbConfiguration();
+            var conf = new SqliteDbConfiguration();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

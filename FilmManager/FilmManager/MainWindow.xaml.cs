@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FilmManager.ViewModels;
+using FilmManagerCore;
 
 namespace FilmManager
 {
@@ -20,9 +22,25 @@ namespace FilmManager
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            await Source.RefreshAsync();
+        }
+
+        MainViewModel Source
+        {
+            get
+            {
+                if (DataContext is MainViewModel)
+                    return (MainViewModel)DataContext;
+                throw new InvalidOperationException("DataContext required");
+            }
         }
     }
 }

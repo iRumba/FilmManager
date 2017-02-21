@@ -49,9 +49,9 @@ namespace FilmDataLayer
             using (var context = CreateFilmContext())
             {
                 var res = new List<Genre>();
-                var query = context.Genres.AsQueryable();
+                IQueryable<Genre> query = context.Genres;
                 if (usedOnly)
-                    query = query.Include(g => g.Films).Where(g => g.Films != null && g.Films.Count > 0);
+                    query = query.Where(g => g.Films.Count > 0);
                 res.AddRange(query);
                 return res;
             }

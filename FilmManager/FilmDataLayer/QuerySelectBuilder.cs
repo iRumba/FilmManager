@@ -9,7 +9,7 @@ using FilmDataLayer.Models;
 
 namespace FilmDataLayer
 {
-    public class QuerySelectBuilder<T> : IDisposable
+    public class QuerySelectBuilder<T> : IDisposable where T:class
     {
         IQueryable<T> _currentQuery;
         int? _itemsPerPage;
@@ -54,7 +54,11 @@ namespace FilmDataLayer
         {
             var res = _currentQuery;
             if (_pageNumber.HasValue)
+            {
+                if (!(res is IOrderedQueryable<T>))
                 res = res.Skip(_itemsPerPage.Value * (_pageNumber.Value - 1)).Take(_itemsPerPage.Value);
+            }
+                
             return res;
         }
 
@@ -91,7 +95,7 @@ namespace FilmDataLayer
             {
                 if (_itemsPerPage.HasValue)
                 {
-                    return Math.Min(_pageNumber.Value, TotalPages.Value);
+                    return Math.Max(Math.Min(_pageNumber.Value, TotalPages.Value), 1);
                 }
                 return null;
             }

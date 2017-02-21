@@ -4,9 +4,93 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FilmManager"
+        xmlns:vm="clr-namespace:FilmManager.ViewModels"
+        xmlns:matcol="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
+        xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:matprog="clr-namespace:MaterialDesignThemes.Wpf.Converters.CircularProgressBar;assembly=MaterialDesignThemes.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="ComboBox" x:Key="FilterControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <mat:Card>
+                            <StackPanel>
+                                <TextBox Text="{Binding Header, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                         HorizontalAlignment="Center"/>
+                                <ComboBox ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                          SelectedItem=""/>
+                            </StackPanel>
+                            
+                        </mat:Card>
+                        
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <DockPanel>
+            <WrapPanel DockPanel.Dock="Top">
+                <WrapPanel.Resources>
+                    <Style TargetType="local:FilterComboBox">
+                        <Setter Property="HeaderTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                               HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Width" Value="130"/>
+                        <Setter Property="Margin" Value="10"/>
+                    </Style>
+                </WrapPanel.Resources>
+                <local:FilterComboBox Header="Жанр" ItemsSource="{Binding UsedGenres}" SelectedValuePath="GenreId" DisplayMemberPath="Name"/>
+                <local:FilterComboBox Header="Год"/>
+                <local:FilterComboBox Header="Рейтинг"/>
+                <local:FilterComboBox Header="Нравится"/>
+            </WrapPanel>
+            <WrapPanel DockPanel.Dock="Bottom">
+                
+            </WrapPanel>
+            <DataGrid ItemsSource="{Binding Films}" AutoGenerateColumns="False" CanUserAddRows="False" 
+                      CanUserDeleteRows="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Оригинальное название" Binding="{Binding OriginalName}"/>
+                    <DataGridTextColumn Header="Русское название" Binding="{Binding LocalName}"/>
+                    <DataGridTextColumn Header="Год" Binding="{Binding Year}"/>
+                    <DataGridTemplateColumn Header="Жанр" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding Genres}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock>
+                                            <Run Text="{Binding Name}"/>;
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Нравится">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <!--<mat:RatingBar Value="{Binding SelfRating, TargetNullValue=0, Mode=TwoWay}"/>-->
+                                <mat:RatingBar Value="2" buttons/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+
+        </DockPanel>
     </Grid>
 </Window>

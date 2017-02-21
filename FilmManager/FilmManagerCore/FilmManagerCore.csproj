@@ -45,6 +45,7 @@
     <Compile Include="Filters\FilmFilters.cs" />
     <Compile Include="Models\Film.cs" />
     <Compile Include="Models\Genre.cs" />
+    <Compile Include="Notifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serializers\DbToAppModelsConverter.cs" />
   </ItemGroup>

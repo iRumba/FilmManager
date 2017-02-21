@@ -25,13 +25,13 @@ namespace FilmDataLayer.Models
         [DataMember]
         public string PosterUrl { get; set; }
         [DataMember]
-        public int? SelfRating { get; set; }
+        public int SelfRating { get; set; }
         [DataMember]
         public float? GlobalRating { get; set; }
         [DataMember]
         public string ForeignUrl { get; set; }
         [DataMember]
-        public ICollection<Genre> Genres { get; set; }
+        public List<Genre> Genres { get; set; }
         public Film()
         {
             Genres = new List<Genre>();

@@ -82,8 +82,8 @@
                     <DataGridTemplateColumn Header="Нравится">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <!--<mat:RatingBar Value="{Binding SelfRating, TargetNullValue=0, Mode=TwoWay}"/>-->
-                                <mat:RatingBar Value="2" buttons/>
+                                <mat:RatingBar Value="{Binding SelfRating, TargetNullValue=0, Mode=TwoWay}"/>
+                                <!--<mat:RatingBar Value="2" />-->
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

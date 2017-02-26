@@ -1,0 +1,101 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Controls"
+                    xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:int="http://schemas.microsoft.com/expression/2010/interactions">
+    <SolidColorBrush x:Key="RatingButtonNormalFill" Color="White"/>
+    <SolidColorBrush x:Key="RatingButtonHoveredStroke" Color="Black"/>
+    <SolidColorBrush x:Key="RatingButtonCheckedFill" Color="Purple"/>
+
+    <ControlTemplate TargetType="local:RatingBarButton" x:Key="defaultRatingBarButtonTemplate">
+        <Border Background="LightGreen" Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}">
+            <ed:RegularPolygon x:Name="regularPolygon" Fill="{StaticResource RatingButtonNormalFill}" InnerRadius="0.55" PointCount="5" Stroke="Black" 
+                       StrokeThickness="0.5" RenderTransformOrigin="0.5,0.5" Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}"
+                           Stretch="Uniform" >
+                <ed:RegularPolygon.RenderTransform>
+                    <RotateTransform x:Name="rotate"/>
+                </ed:RegularPolygon.RenderTransform>
+                <ed:RegularPolygon.Triggers>
+                    <EventTrigger RoutedEvent="MouseDown">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" To="72" Duration="0:0:0.2"
+                                                         />
+                                <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" To="0" Duration="0"
+                                                         BeginTime="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </ed:RegularPolygon.Triggers>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                        </VisualState>
+                        <VisualState x:Name="MouseOver">
+                            <Storyboard>
+                                <local:BrushAnimation Storyboard.TargetProperty="Stroke" Storyboard.TargetName="regularPolygon" 
+                                                        To="{StaticResource RatingButtonHoveredStroke}" Duration="0:0:0.2">
+                                </local:BrushAnimation>
+                                <DoubleAnimation Storyboard.TargetProperty="StrokeThickness" To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                    <VisualStateGroup x:Name="CheckStates">
+                        <VisualState x:Name="Checked">
+                            <Storyboard>
+                                <local:BrushAnimation Storyboard.TargetProperty="Fill" Storyboard.TargetName="regularPolygon" 
+                                                        To="{StaticResource RatingButtonCheckedFill}" Duration="0:0:0.2">
+                                </local:BrushAnimation>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Unchecked"/>
+                    </VisualStateGroup>
+
+                </VisualStateManager.VisualStateGroups>
+            </ed:RegularPolygon>
+        </Border>
+
+    </ControlTemplate>
+
+    <Style TargetType="local:RatingBarButton">
+        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Template" Value="{StaticResource defaultRatingBarButtonTemplate}"/>
+    </Style>
+    
+    <Style TargetType="local:RatingBar">
+        <Setter Property="ButtonTemplate" Value="{StaticResource defaultRatingBarButtonTemplate}"/>
+        <Setter Property="ButtonStyle">
+            <Setter.Value>
+                <Style TargetType="local:RatingBarButton" BasedOn="{StaticResource {x:Type local:RatingBarButton}}"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RatingBar">
+                        <ItemsControl ItemsSource="{Binding Values, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RatingBar}}"
+                                 Name="PART_ButtonsList">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <local:RatingBarButton 
+                                        Width="{Binding ButtonWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RatingBar}}" 
+                                        Height="{Binding ButtonHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RatingBar}}" 
+                                        Template="{Binding ButtonTemplate, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RatingBar}}"
+                                        Value="{Binding Value}"
+                                        IsChecked="{Binding IsChecked}"
+                                        Command="{Binding ClickCommand}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,58 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Controls"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing">
+    <PathGeometry x:Key="defaultGeometry">
+        M 0,0 L 1,0 L 1,1 L 0,1 Z
+        <!--<PathFigure StartPoint="0,0" IsClosed="True" IsFilled="True">
+            <PathFigure.Segments>
+                <LineSegment Point="1,0"/>
+                <LineSegment Point="1,1"/>
+                <LineSegment Point="0,1"/>
+            </PathFigure.Segments>
+        </PathFigure>-->
+    </PathGeometry>
+    <!--<ControlTemplate x:Key="defaultTemplate">
+        <Path Data="{Binding PathData}"
+              Fill="{Binding Background}"
+              Stroke="{Binding BorderBrush}"
+              StrokeThickness="{Binding BorderThickness}"
+              Stretch="Uniform"
+              >
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup >
+                    <VisualState Name="Normal" />
+                    <VisualState Name="MouseOver">
+                        <Storyboard>
+                            <local:BrushAnimation Storyboard.TargetName="Fill"     
+                    Storyboard.TargetProperty="Color"
+                    To="Red"/>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+
+            </VisualStateManager.VisualStateGroups>
+        </Path>
+    </ControlTemplate>-->
+    <SolidColorBrush x:Key="defaultHoverBackground" Color="Red"/>
+    <SolidColorBrush x:Key="defaultBackground" Color="Yellow"/>
+    <sys:Double x:Key="defaultBorderWeight">0.5</sys:Double>
+    <ControlTemplate TargetType="local:RatingBarButton" x:Key="defaultTemplate">
+        <ed:RegularPolygon x:Name="regularPolygon" Fill="White" Height="100" InnerRadius="0.55" PointCount="5" Stretch="Fill" Stroke="Black" 
+                       Width="100" StrokeThickness="0.5">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="Hovered">
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="regularPolygon" To="Red" Duration="0:0:0.3">
+                                <!--<EasingColorKeyFrame KeyTime="0:0:0.3" Value="Red"/>-->
+                            </ColorAnimation>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </ed:RegularPolygon>
+    </ControlTemplate>
+</ResourceDictionary>

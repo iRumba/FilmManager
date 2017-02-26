@@ -8,6 +8,7 @@
         xmlns:matcol="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
         xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:matprog="clr-namespace:MaterialDesignThemes.Wpf.Converters.CircularProgressBar;assembly=MaterialDesignThemes.Wpf"
+        xmlns:controls="clr-namespace:Controls;assembly=Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
     <Window.DataContext>
@@ -36,24 +37,8 @@
     <Grid>
         <DockPanel>
             <WrapPanel DockPanel.Dock="Top">
-                <WrapPanel.Resources>
-                    <Style TargetType="local:FilterComboBox">
-                        <Setter Property="HeaderTemplate">
-                            <Setter.Value>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Content, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                               HorizontalAlignment="Center"/>
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="Width" Value="130"/>
-                        <Setter Property="Margin" Value="10"/>
-                    </Style>
-                </WrapPanel.Resources>
-                <local:FilterComboBox Header="Жанр" ItemsSource="{Binding UsedGenres}" SelectedValuePath="GenreId" DisplayMemberPath="Name"/>
-                <local:FilterComboBox Header="Год"/>
-                <local:FilterComboBox Header="Рейтинг"/>
-                <local:FilterComboBox Header="Нравится"/>
+                <controls:RatingBar Value="3" ButtonWidth="200" ButtonHeight="200"/>
+
             </WrapPanel>
             <WrapPanel DockPanel.Dock="Bottom">
                 

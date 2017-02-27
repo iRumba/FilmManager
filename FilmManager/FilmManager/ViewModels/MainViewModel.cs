@@ -11,6 +11,7 @@ namespace FilmManager.ViewModels
 {
     public class MainViewModel : Notifier
     {
+        int _val = 3;
         FilmManagerApplication _source;
 
         public MainViewModel()
@@ -72,6 +73,20 @@ namespace FilmManager.ViewModels
             get
             {
                 return _source.PageCount;
+            }
+        }
+
+        public int Val
+        {
+            get
+            {
+                return _val;
+            }
+
+            set
+            {
+                _val = value;
+                OnPropertyChanged(nameof(Val));
             }
         }
 

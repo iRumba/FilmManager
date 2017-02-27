@@ -2,17 +2,47 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Controls"
                     xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
-                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    xmlns:int="http://schemas.microsoft.com/expression/2010/interactions">
+                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                    xmlns:int="http://schemas.microsoft.com/expression/2010/interactions"
+                    xmlns:conv="clr-namespace:Controls.Converters">
+    <conv:RectWidthToStarWidthConverter x:Key="RectWidthToStarWidthConverter"/>
     <SolidColorBrush x:Key="RatingButtonNormalFill" Color="White"/>
     <SolidColorBrush x:Key="RatingButtonHoveredStroke" Color="Black"/>
     <SolidColorBrush x:Key="RatingButtonCheckedFill" Color="Purple"/>
 
     <ControlTemplate TargetType="local:RatingBarButton" x:Key="defaultRatingBarButtonTemplate">
-        <Border Background="LightGreen" Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}">
-            <ed:RegularPolygon x:Name="regularPolygon" Fill="{StaticResource RatingButtonNormalFill}" InnerRadius="0.55" PointCount="5" Stroke="Black" 
-                       StrokeThickness="0.5" RenderTransformOrigin="0.5,0.5" Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}"
-                           Stretch="Uniform" >
+        <Border Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualWidth}"
+                Name="border">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                    </VisualState>
+                    <VisualState x:Name="MouseOver">
+                        <Storyboard>
+                            <local:BrushAnimation Storyboard.TargetProperty="Stroke" Storyboard.TargetName="regularPolygon" 
+                                                        To="{StaticResource RatingButtonHoveredStroke}" Duration="0:0:0.2">
+                            </local:BrushAnimation>
+                            <DoubleAnimation Storyboard.TargetProperty="StrokeThickness" Storyboard.TargetName="regularPolygon" To="1" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="CheckStates">
+                    <VisualState x:Name="Checked">
+                        <Storyboard>
+                            <local:BrushAnimation Storyboard.TargetProperty="Fill" Storyboard.TargetName="regularPolygon" 
+                                                        To="{StaticResource RatingButtonCheckedFill}" Duration="0:0:0.2">
+                            </local:BrushAnimation>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Unchecked"/>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+            <ed:RegularPolygon Name="regularPolygon" Fill="{StaticResource RatingButtonNormalFill}" InnerRadius="0.55" PointCount="5" Stroke="Black" 
+                       StrokeThickness="0.5" RenderTransformOrigin="0.5,0.5" 
+                               Width="{Binding ActualWidth, ElementName=border, Converter={StaticResource RectWidthToStarWidthConverter}}" 
+                               Height="{Binding ActualHeight, ElementName=border}"
+                           Stretch="Uniform">
                 <ed:RegularPolygon.RenderTransform>
                     <RotateTransform x:Name="rotate"/>
                 </ed:RegularPolygon.RenderTransform>
@@ -28,32 +58,8 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </ed:RegularPolygon.Triggers>
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal">
-                        </VisualState>
-                        <VisualState x:Name="MouseOver">
-                            <Storyboard>
-                                <local:BrushAnimation Storyboard.TargetProperty="Stroke" Storyboard.TargetName="regularPolygon" 
-                                                        To="{StaticResource RatingButtonHoveredStroke}" Duration="0:0:0.2">
-                                </local:BrushAnimation>
-                                <DoubleAnimation Storyboard.TargetProperty="StrokeThickness" To="1" Duration="0:0:0.2"/>
-                            </Storyboard>
-                        </VisualState>
-                    </VisualStateGroup>
-                    <VisualStateGroup x:Name="CheckStates">
-                        <VisualState x:Name="Checked">
-                            <Storyboard>
-                                <local:BrushAnimation Storyboard.TargetProperty="Fill" Storyboard.TargetName="regularPolygon" 
-                                                        To="{StaticResource RatingButtonCheckedFill}" Duration="0:0:0.2">
-                                </local:BrushAnimation>
-                            </Storyboard>
-                        </VisualState>
-                        <VisualState x:Name="Unchecked"/>
-                    </VisualStateGroup>
-
-                </VisualStateManager.VisualStateGroups>
             </ed:RegularPolygon>
+
         </Border>
 
     </ControlTemplate>

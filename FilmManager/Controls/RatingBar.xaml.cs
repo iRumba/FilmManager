@@ -123,7 +123,12 @@ namespace Controls
         // Using a DependencyProperty as the backing store for Value.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(int), typeof(RatingBar), 
-                new PropertyMetadata(0) { CoerceValueCallback = CoerceValue, PropertyChangedCallback = ValuePropertyChanged }, 
+                new FrameworkPropertyMetadata(0)
+                {
+                    CoerceValueCallback = CoerceValue,
+                    PropertyChangedCallback = ValuePropertyChanged,
+                    BindsTwoWayByDefault = true
+                }, 
                 ValidateValue);
 
         static bool ValidateValue(object value)

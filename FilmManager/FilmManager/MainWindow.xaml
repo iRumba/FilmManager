@@ -37,14 +37,21 @@
     <Grid>
         <DockPanel>
             <WrapPanel DockPanel.Dock="Top">
-                <controls:RatingBar Value="3" ButtonWidth="200" ButtonHeight="200"/>
+                <mat:RatingBar Value="{Binding Val, Mode=TwoWay}"/>
 
             </WrapPanel>
             <WrapPanel DockPanel.Dock="Bottom">
                 
             </WrapPanel>
+            <!--<ListView>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Оригинальное название" DisplayMemberBinding="{Binding OriginalName}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>-->
             <DataGrid ItemsSource="{Binding Films}" AutoGenerateColumns="False" CanUserAddRows="False" 
-                      CanUserDeleteRows="False" IsReadOnly="True">
+                      CanUserDeleteRows="False" IsReadOnly="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Оригинальное название" Binding="{Binding OriginalName}"/>
                     <DataGridTextColumn Header="Русское название" Binding="{Binding LocalName}"/>
@@ -67,8 +74,7 @@
                     <DataGridTemplateColumn Header="Нравится">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <mat:RatingBar Value="{Binding SelfRating, TargetNullValue=0, Mode=TwoWay}"/>
-                                <!--<mat:RatingBar Value="2" />-->
+                                <mat:RatingBar Value="{Binding SelfRating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="FilmManagerApplication.cs" />
     <Compile Include="Filters\FilmFilters.cs" />
+    <Compile Include="Filters\FilterBase.cs" />
     <Compile Include="Models\Film.cs" />
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Notifier.cs" />

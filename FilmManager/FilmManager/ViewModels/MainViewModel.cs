@@ -16,7 +16,10 @@ namespace FilmManager.ViewModels
         public MainViewModel()
         {
             _source = new FilmManagerApplication(ConfigurationManager.AppSettings["connectionString"]);
+            AdditionalData = new MainVmAdditionalData();
         }
+
+        public MainVmAdditionalData AdditionalData { get; set; }
 
         public List<Film> Films
         {

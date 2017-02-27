@@ -10,6 +10,40 @@ namespace FilmManager.ViewModels
 {
     public class MainVmAdditionalData : Notifier
     {
-        public List<Genre> Genres { get; set; }
+        FilterDataVm _genres;
+        FilterDataVm _years;
+
+        public MainVmAdditionalData()
+        {
+            
+        }
+
+        public FilterDataVm Genres
+        {
+            get
+            {
+                return _genres;
+            }
+
+            set
+            {
+                _genres = new FilterDataVm(value);
+                OnPropertyChanged(nameof(Genres));
+            }
+        }
+
+        public FilterDataVm Years
+        {
+            get
+            {
+                return _years;
+            }
+
+            set
+            {
+                _years = new FilterDataVm(value);
+                OnPropertyChanged(nameof(Years));
+            }
+        }
     }
 }

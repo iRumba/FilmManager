@@ -36,6 +36,14 @@ namespace FilmManagerCore
             }
         }
 
+        public List<int> Years
+        {
+            get
+            {
+                return _filmDataAdapter.GetFilmYears();
+            }
+        }
+
         public int ItemsPerPage { get; set; }
         public int PageCount { get; set; }
         public int CurrentPage { get; set; }

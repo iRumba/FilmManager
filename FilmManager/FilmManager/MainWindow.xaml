@@ -37,7 +37,7 @@
         <DockPanel>
             <WrapPanel DockPanel.Dock="Top">
                 <WrapPanel.Resources>
-                    <Style TargetType="local:FilterComboBox">
+                    <Style TargetType="HeaderedContentControl">
                         <Setter Property="HeaderTemplate">
                             <Setter.Value>
                                 <DataTemplate>
@@ -50,10 +50,14 @@
                         <Setter Property="Margin" Value="10"/>
                     </Style>
                 </WrapPanel.Resources>
-                <local:FilterComboBox Header="Жанр" ItemsSource="{Binding UsedGenres}" SelectedValuePath="GenreId" DisplayMemberPath="Name"/>
+                <HeaderedContentControl Header="Жанр">
+                    <ComboBox  ItemsSource="{Binding UsedGenres}" SelectedValuePath="GenreId" DisplayMemberPath="Name"/>
+                </HeaderedContentControl>
+                
+                <!--<local:FilterComboBox Header="Жанр" ItemsSource="{Binding UsedGenres}" SelectedValuePath="GenreId" DisplayMemberPath="Name"/>
                 <local:FilterComboBox Header="Год"/>
                 <local:FilterComboBox Header="Рейтинг"/>
-                <local:FilterComboBox Header="Нравится"/>
+                <local:FilterComboBox Header="Нравится"/>-->
             </WrapPanel>
             <WrapPanel DockPanel.Dock="Bottom">
                 
@@ -82,7 +86,7 @@
                     <DataGridTemplateColumn Header="Нравится">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <mat:RatingBar Value="{Binding SelfRating, TargetNullValue=0, Mode=TwoWay}"/>
+                                <mat:RatingBar Value="{Binding SelfRating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 <!--<mat:RatingBar Value="2" />-->
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

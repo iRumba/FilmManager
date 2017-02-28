@@ -42,5 +42,15 @@ namespace FilmManager
                 throw new InvalidOperationException("DataContext required");
             }
         }
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+
+        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+
+        }
     }
 }

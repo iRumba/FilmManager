@@ -12,7 +12,7 @@ namespace FilmDataLayer.Models
     public class Genre
     {
         [DataMember]
-        public int GenreId { get; set; }
+        public long GenreId { get; set; }
         [DataMember]
         public string Name { get; set; }
         [XmlIgnore]

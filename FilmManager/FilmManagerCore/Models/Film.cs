@@ -12,7 +12,7 @@ namespace FilmManagerCore.Models
     [DataContract]
     public class Film : Notifier
     {
-        int _filmId;
+        long _filmId;
         string _originalName;
         string _localName;
         int? _year;
@@ -24,7 +24,7 @@ namespace FilmManagerCore.Models
         string _foreignUrl;
 
         [DataMember]
-        public int FilmId
+        public long FilmId
         {
             get
             {

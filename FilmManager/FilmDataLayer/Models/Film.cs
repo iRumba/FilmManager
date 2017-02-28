@@ -11,7 +11,7 @@ namespace FilmDataLayer.Models
     public class Film
     {
         [DataMember]
-        public int FilmId { get; set; }
+        public long FilmId { get; set; }
         [DataMember]
         public string OriginalName { get; set; }
         [DataMember]

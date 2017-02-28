@@ -77,16 +77,6 @@ namespace FilmManagerCore
             }
         }
 
-        //public void RefreshAdditionalData()
-        //{
-        //    UsedGenres = _filmDataAdapter.GetFilmGenres(true).Select(g => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Genre, Genre>(g)).ToList();
-        //}
-
-        //public async Task RefreshAdditionalDataAsync()
-        //{
-        //    await Task.Run((Action)Refresh);
-        //}
-
         public async Task RefreshAsync()
         {
             await Task.Run((Action)Refresh);

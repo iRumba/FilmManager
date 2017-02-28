@@ -13,29 +13,62 @@
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
-    <Window.Resources>
-        <Style TargetType="ComboBox" x:Key="FilterControl">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <mat:Card>
-                            <StackPanel>
-                                <TextBox Text="{Binding Header, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                         HorizontalAlignment="Center"/>
-                                <ComboBox ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                          SelectedItem=""/>
-                            </StackPanel>
-                            
-                        </mat:Card>
-                        
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
+
     <Grid>
         <DockPanel>
-            <WrapPanel DockPanel.Dock="Top">
+            <StackPanel DockPanel.Dock="Top">
+                <ItemsControl ItemsSource="{Binding Filters}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <mat:Card  Margin="5" Padding="10">
+                                <StackPanel Orientation="Vertical" Width="130">
+                                    <TextBlock Text="{Binding FilterText}" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                    <ComboBox ItemsSource="{Binding}" SelectedValue="{Binding SelectedValue}" DisplayMemberPath="Text" SelectedValuePath="Value">
+                                    </ComboBox>
+                                </StackPanel>
+                            </mat:Card>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <DockPanel>
+                    <mat:Card DockPanel.Dock="Right" Margin="5">
+                        <StackPanel Orientation="Horizontal">
+                            <Button mat:ShadowAssist.ShadowDepth="Depth0" Padding="3" 
+                                    Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" 
+                                    Background="White" Foreground="#FF787878" BorderBrush="White"
+                                    Command="{Binding RefreshCommand}">
+                                <mat:PackIcon Kind="Refresh" VerticalAlignment="Stretch" Width="24" Height="24"/>
+                            </Button>
+                            <Button mat:ShadowAssist.ShadowDepth="Depth0" Padding="3" 
+                                    Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" 
+                                    Background="White" Foreground="#FF787878" BorderBrush="White"
+                                    Command="{Binding ClearFiltersCommand}">
+                                <mat:PackIcon Kind="FilterRemove" VerticalAlignment="Stretch" Width="24" Height="24"/>
+                            </Button>
+                        </StackPanel>
+                    </mat:Card>
+                    <mat:Card Margin="5">
+                        <DockPanel>
+                            <Button mat:ShadowAssist.ShadowDepth="Depth0" DockPanel.Dock="Left" Padding="3" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Background="White" Foreground="#FF787878" BorderBrush="White">
+                                <mat:PackIcon Kind="Magnify" VerticalAlignment="Stretch" Width="24" Height="24"/>
+                            </Button>
+                            <TextBox Text="" Name="searchBox" VerticalAlignment="Center" Margin="3,0"/>
+
+                        </DockPanel>
+
+                    </mat:Card>
+                </DockPanel>
+
+                
+            </StackPanel>
+
+            <!--<WrapPanel DockPanel.Dock="Top">
                 <WrapPanel.Resources>
                     <Style TargetType="HeaderedContentControl">
                         <Setter Property="HeaderTemplate">
@@ -54,11 +87,11 @@
                     <ComboBox  ItemsSource="{Binding UsedGenres}" SelectedValuePath="GenreId" DisplayMemberPath="Name"/>
                 </HeaderedContentControl>
                 
-                <!--<local:FilterComboBox Header="Жанр" ItemsSource="{Binding UsedGenres}" SelectedValuePath="GenreId" DisplayMemberPath="Name"/>
+                --><!--<local:FilterComboBox Header="Жанр" ItemsSource="{Binding UsedGenres}" SelectedValuePath="GenreId" DisplayMemberPath="Name"/>
                 <local:FilterComboBox Header="Год"/>
                 <local:FilterComboBox Header="Рейтинг"/>
-                <local:FilterComboBox Header="Нравится"/>-->
-            </WrapPanel>
+                <local:FilterComboBox Header="Нравится"/>--><!--
+            </WrapPanel>-->
             <WrapPanel DockPanel.Dock="Bottom">
                 
             </WrapPanel>

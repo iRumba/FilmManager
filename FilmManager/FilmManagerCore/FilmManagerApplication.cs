@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -53,15 +54,34 @@ namespace FilmManagerCore
         {
             using (var query = _filmDataAdapter.GetFilmsQueryBulder())
             {
+                byte[] bytes = null;
+                var str = string.Empty;
+                if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
+                {
+                    bytes = Encoding.Convert(Encoding.Unicode, Encoding.UTF8, Encoding.Unicode.GetBytes(Filters.TextFilter.ToUpper()));
+                    str = Encoding.UTF8.GetString(bytes);
+                }
+
+
+                var stringComparer = EqualityComparer<string>.Default;
                 if (Filters.GenreId.HasValue)
                     query.AddFilter(f => f.Genres.Any(g => g.GenreId == Filters.GenreId.Value));
                 if (Filters.Rating.HasValue)
                     query.AddFilter(f => f.GlobalRating >= Filters.Rating.Value);
                 if (Filters.SelfRating.HasValue)
                     query.AddFilter(f => f.SelfRating == Filters.SelfRating.Value);
+                //if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
+                //    query.AddFilter(f => f.LocalName.ToLower().Contains(Filters.TextFilter.ToLower()) ||
+                //    f.OriginalName.ToLower().Contains(Filters.TextFilter.ToLower()) ||
+                //    f.Description.ToLower().Contains(Filters.TextFilter.ToLower()));
                 if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
-                    query.AddFilter(f => f.LocalName.Contains(Filters.TextFilter) || f.OriginalName.Contains(Filters.TextFilter)
-                    || f.Description.Contains(Filters.TextFilter));
+                    query.AddFilter(f => f.LocalName.ToUpper().Contains(str) ||
+                    f.OriginalName.ToUpper().Contains(str) ||
+                    f.Description.ToUpper().Contains(str));
+                //if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
+                //    query.AddFilter(f => f.LocalName.IndexOf(str,StringComparison.CurrentCultureIgnoreCase) >= 0 ||
+                //    f.OriginalName.ToUpper().Contains(str) ||
+                //    f.Description.ToUpper().Contains(str));
                 if (Filters.Year.HasValue)
                     query.AddFilter(f => f.Year == Filters.Year.Value);
 

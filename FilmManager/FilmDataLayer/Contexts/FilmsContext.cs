@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FilmDataLayer.Models;
+using FilmDataLayer.SqliteUtils;
 
 namespace FilmDataLayer.Contexts
 {
@@ -16,11 +17,14 @@ namespace FilmDataLayer.Contexts
 
         public FilmsContext(string connectionString) : base(new SQLiteConnection(connectionString), true)
         {
+
             var conf = new SqliteDbConfiguration();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            //SQLiteFunction.RegisterFunction(typeof(SQLiteCaseInsensitiveCollation));
+            //SQLiteFunction.RegisterFunction(typeof(SqLiteCyrHelper));
             modelBuilder.Entity<Film>().HasMany(g => g.Genres).WithMany(f => f.Films).Map(m =>
             {
                 m.ToTable("FilmGenres");

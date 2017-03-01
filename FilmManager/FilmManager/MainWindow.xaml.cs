@@ -25,7 +25,23 @@ namespace FilmManager
 
         public MainWindow()
         {
+
             InitializeComponent();
+            var refreshCommand = new CommandBinding(Source.RefreshCommand);
+            refreshCommand.CanExecute += RefreshCommand_CanExecute;
+            refreshCommand.Executed += RefreshCommand_Executed;
+
+            var searchCommand = new CommandBinding(Source.SearchCommand);
+            searchCommand.CanExecute += SearchCommand_CanExecute;
+            searchCommand.Executed += SearchCommand_Executed;
+
+            var clearFilters = new CommandBinding(Source.ClearFiltersCommand);
+            clearFilters.CanExecute += ClearFiltersCommand_CanExecute;
+            clearFilters.Executed += ClearFiltersCommand_Executed;
+
+            CommandManager.RegisterClassCommandBinding(GetType(), refreshCommand);
+            CommandManager.RegisterClassCommandBinding(GetType(), searchCommand);
+            CommandManager.RegisterClassCommandBinding(GetType(), clearFilters);
         }
 
         async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -43,14 +59,33 @@ namespace FilmManager
             }
         }
 
-        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        void ClearFiltersCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            Source.ClearFilters();
         }
 
-        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        void ClearFiltersCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
+            e.CanExecute = true;
+        }
+        async void SearchCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            await Source.RefreshAsync();
+        }
 
+        private void SearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        async void RefreshCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            await Source.RefreshAsync();
+        }
+
+        void RefreshCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
         }
     }
 }

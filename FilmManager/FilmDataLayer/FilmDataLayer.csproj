@@ -71,6 +71,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuerySelectBuilder.cs" />
     <Compile Include="SqliteDbConfiguration.cs" />
+    <Compile Include="SqliteUtils\SQLiteCaseInsensitiveCollation.cs" />
+    <Compile Include="SqliteUtils\SqLiteCyrHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

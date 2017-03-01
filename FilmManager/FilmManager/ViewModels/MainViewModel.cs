@@ -25,21 +25,7 @@ namespace FilmManager.ViewModels
             SearchCommand = new RoutedCommand();
             ClearFiltersCommand = new RoutedCommand();
 
-            var refreshCommand = new CommandBinding(RefreshCommand);
-            refreshCommand.CanExecute += RefreshCommand_CanExecute;
-            refreshCommand.Executed += RefreshCommand_Executed;
 
-            var searchCommand = new CommandBinding(SearchCommand);
-            searchCommand.CanExecute += SearchCommand_CanExecute;
-            searchCommand.Executed += SearchCommand_Executed;
-
-            var clearFilters = new CommandBinding(ClearFiltersCommand);
-            clearFilters.CanExecute += ClearFiltersCommand_CanExecute;
-            clearFilters.Executed += ClearFiltersCommand_Executed;
-
-            CommandManager.RegisterClassCommandBinding(typeof(MainWindow), refreshCommand);
-            CommandManager.RegisterClassCommandBinding(typeof(MainViewModel), searchCommand);
-            CommandManager.RegisterClassCommandBinding(typeof(MainViewModel), clearFilters);
 
             _source = new FilmManagerApplication(ConfigurationManager.AppSettings["connectionString"]);
             //AdditionalData = new MainVmAdditionalData();
@@ -52,15 +38,7 @@ namespace FilmManager.ViewModels
             Filters.RatingChanged += Filters_RatingChanged;
         }
 
-        void ClearFiltersCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            ClearFilters();
-        }
 
-        void ClearFiltersCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
 
         public string SearchText
         {
@@ -78,25 +56,7 @@ namespace FilmManager.ViewModels
             }
         }
 
-        async void SearchCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            await RefreshAsync();
-        }
 
-        private void SearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        async void RefreshCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            await RefreshAsync();
-        }
-
-        void RefreshCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
 
         async void Filters_RatingChanged(object sender, RatingChangedEventArgs e)
         {
@@ -210,12 +170,13 @@ namespace FilmManager.ViewModels
             Filters.Years.SetData(_source.Years);
         }
 
-        void ClearFilters()
+        public void ClearFilters()
         {
             Filters.Genres.SelectedValue = null;
             Filters.Years.SelectedValue = null;
             Filters.SelfRatings.SelectedValue = null;
             Filters.Ratings.SelectedValue = null;
+            SearchText = string.Empty;
         }
     }
 }

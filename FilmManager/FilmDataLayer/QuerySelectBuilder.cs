@@ -28,19 +28,16 @@ namespace FilmDataLayer
         public void AddFilter(Expression<Func<T,bool>> filter)
         {
             _currentQuery = _currentQuery.Where(filter);
-            ClearCache();
         }
 
         public void AddOrder<TKey>(Expression<Func<T,TKey>> order)
         {
             _currentQuery = _currentQuery.OrderBy(order);
-            ClearCache();
         }
 
         public void AddDescOrder<TKey>(Expression<Func<T, TKey>> order)
         {
             _currentQuery = _currentQuery.OrderBy(order);
-            ClearCache();
         }
 
         public void SetPaginate(int itemsPerPage, int pageNumber)
@@ -58,7 +55,12 @@ namespace FilmDataLayer
                 if (!(res is IOrderedQueryable<T>))
                 res = res.Skip(_itemsPerPage.Value * (_pageNumber.Value - 1)).Take(_itemsPerPage.Value);
             }
-                
+            var sql = string.Empty;
+            try
+            {
+                sql = res.ToString(); //((System.Data.Entity.Core.Objects.ObjectQuery)res.AsQueryable()).ToTraceString();
+            }
+            catch { }
             return res;
         }
 

@@ -36,9 +36,8 @@ namespace FilmManager.ViewModels
             Filters.YearChanged += Filters_YearChanged;
             Filters.SelfRatingChanged += Filters_SelfRatingChanged;
             Filters.RatingChanged += Filters_RatingChanged;
+            CurrentPage = 1;
         }
-
-
 
         public string SearchText
         {
@@ -55,8 +54,6 @@ namespace FilmManager.ViewModels
                 }
             }
         }
-
-
 
         async void Filters_RatingChanged(object sender, RatingChangedEventArgs e)
         {

@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="FilmManager.PageCounter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FilmManager"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Name="uc"
+             Loaded="uc_Loaded">
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="1"
+                    IsEnabled="{Binding FirstButtonEnabled, ElementName=uc}"
+                    Margin="0,0,5,0"
+                    Click="Button_Click"/>
+            <TextBlock Text="..." VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding FirstButtonEnabled, ElementName=uc}" Value="False" >
+                                <Setter Property="TextBlock.Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <ListBox ItemsSource="{Binding VisiblePages, ElementName=uc}" SelectedItem="{Binding CurrentPage, ElementName=uc}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+            <TextBlock Text="..." VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding LastButtonEnabled, ElementName=uc}" Value="False" >
+                                <Setter Property="TextBlock.Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <Button Content="{Binding PagesCount, ElementName=uc}"
+                    IsEnabled="{Binding LastButtonEnabled, ElementName=uc}"
+                    Margin="5,0,0,0"
+                    Click="Button_Click_1"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

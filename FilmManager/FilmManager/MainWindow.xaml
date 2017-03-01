@@ -8,6 +8,7 @@
         xmlns:matcol="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
         xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:matprog="clr-namespace:MaterialDesignThemes.Wpf.Converters.CircularProgressBar;assembly=MaterialDesignThemes.Wpf"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{StaticResource MaterialDesignFont}"
@@ -103,8 +104,15 @@
                 <local:FilterComboBox Header="Рейтинг"/>
                 <local:FilterComboBox Header="Нравится"/>--><!--
             </WrapPanel>-->
-            <WrapPanel DockPanel.Dock="Bottom">
-                
+            <WrapPanel DockPanel.Dock="Bottom" Margin="5">
+                <ComboBox SelectedItem="{Binding ItemsPerPage}" Width="50" Margin="0,0,10,0">
+                    <sys:Int32>1</sys:Int32>
+                    <sys:Int32>5</sys:Int32>
+                    <sys:Int32>15</sys:Int32>
+                    <sys:Int32>25</sys:Int32>
+                    <sys:Int32>50</sys:Int32>
+                </ComboBox>
+                <local:PageCounter PagesCount="{Binding TotalPages}" CurrentPage="{Binding CurrentPage}"/>
             </WrapPanel>
             <DataGrid ItemsSource="{Binding Films}" AutoGenerateColumns="False" CanUserAddRows="False" 
                       CanUserDeleteRows="False" IsReadOnly="True">

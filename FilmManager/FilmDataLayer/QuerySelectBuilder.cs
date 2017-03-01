@@ -12,17 +12,25 @@ namespace FilmDataLayer
     public class QuerySelectBuilder<T> : IDisposable where T:class
     {
         IQueryable<T> _currentQuery;
-        int? _itemsPerPage;
-        int? _pageNumber;
+        //int? _itemsPerPage;
+        //int? _pageNumber;
 
         int? _totalCountCache;
-        int? _totalPagesCache;
+        //int? _totalPagesCache;
 
         internal event EventHandler Disposing;
 
         internal QuerySelectBuilder(IQueryable<T> startQuery)
         {
             _currentQuery = startQuery;
+        }
+
+        public bool IsOrdered
+        {
+            get
+            {
+                return _currentQuery is IOrderedQueryable;
+            }
         }
 
         public void AddFilter(Expression<Func<T,bool>> filter)
@@ -40,27 +48,35 @@ namespace FilmDataLayer
             _currentQuery = _currentQuery.OrderBy(order);
         }
 
-        public void SetPaginate(int itemsPerPage, int pageNumber)
-        {
-            _itemsPerPage = itemsPerPage;
-            _pageNumber = pageNumber;
-            //_currentQuery = _currentQuery.Skip(itemsPerPage * (pageNumber - 1)).Take(itemsPerPage);
-        }
+        //public void SetPaginate(int itemsPerPage, int pageNumber)
+        //{
+        //    _itemsPerPage = itemsPerPage;
+        //    _pageNumber = pageNumber;
+        //    //_currentQuery = _currentQuery.Skip(itemsPerPage * (pageNumber - 1)).Take(itemsPerPage);
+        //}
 
         public IEnumerable<T> GetResult()
         {
+            //var res = _currentQuery;
+            //if (_pageNumber.HasValue)
+            //{
+            //    if (!(res is IOrderedQueryable<T>))
+            //        res = res.Skip(_itemsPerPage.Value * (_pageNumber.Value - 1)).Take(_itemsPerPage.Value);
+            //}
+            //var sql = string.Empty;
+            //try
+            //{
+            //    sql = res.ToString(); //((System.Data.Entity.Core.Objects.ObjectQuery)res.AsQueryable()).ToTraceString();
+            //}
+            //catch { }
+            return _currentQuery;
+        }
+
+        public IEnumerable<T> GetPage(int itemsPerPage, int pageNumber)
+        {
             var res = _currentQuery;
-            if (_pageNumber.HasValue)
-            {
-                if (!(res is IOrderedQueryable<T>))
-                res = res.Skip(_itemsPerPage.Value * (_pageNumber.Value - 1)).Take(_itemsPerPage.Value);
-            }
-            var sql = string.Empty;
-            try
-            {
-                sql = res.ToString(); //((System.Data.Entity.Core.Objects.ObjectQuery)res.AsQueryable()).ToTraceString();
-            }
-            catch { }
+            if (res is IOrderedQueryable<T>)
+                res = res.Skip(itemsPerPage * (pageNumber - 1)).Take(itemsPerPage);
             return res;
         }
 
@@ -74,35 +90,6 @@ namespace FilmDataLayer
             }
         }
 
-        public int? TotalPages
-        {
-            get
-            {
-                if (_itemsPerPage.HasValue)
-                {
-                    if (!_totalPagesCache.HasValue)
-                    {
-                        var tCount = TotalCount;
-                        _totalPagesCache = (int)Math.Ceiling((decimal)tCount / _itemsPerPage.Value);
-                    }
-                    return _totalPagesCache;
-                }
-                return null;
-            }
-        }
-
-        public int? CurrentPage
-        {
-            get
-            {
-                if (_itemsPerPage.HasValue)
-                {
-                    return Math.Max(Math.Min(_pageNumber.Value, TotalPages.Value), 1);
-                }
-                return null;
-            }
-        }
-
         public void Dispose()
         {
             Disposing.Invoke(this, new EventArgs());
@@ -112,7 +99,7 @@ namespace FilmDataLayer
         void ClearCache()
         {
             _totalCountCache = null;
-            _totalPagesCache = null;
+            //_totalPagesCache = null;
         }
     }
 }

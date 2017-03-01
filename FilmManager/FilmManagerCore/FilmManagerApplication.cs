@@ -87,13 +87,24 @@ namespace FilmManagerCore
 
                 query.AddOrder(f => f.FilmId);
 
-                query.SetPaginate(ItemsPerPage, CurrentPage);
-
                 TotalCount = query.TotalCount;
-                PageCount = query.TotalPages.Value;
-                CurrentPage = query.CurrentPage.Value;
+                //CurrentPage = query.CurrentPage.Value;
+
+                List<FilmDataLayer.Models.Film> res = null;
+                if (ItemsPerPage > 0 && CurrentPage > 0)
+                {
+                    if (!query.IsOrdered)
+                        query.AddOrder(f => f.FilmId);
+                    PageCount = (int)Math.Ceiling((decimal)TotalCount / ItemsPerPage);
+                     
+                    res = query.GetPage(ItemsPerPage, CurrentPage).ToList();
+                }
+                    
+                else
+                    res = query.GetResult().ToList();
+                    //query.SetPaginate(ItemsPerPage, CurrentPage);
                  
-                Films = query.GetResult().ToList().Select(f => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Film, Film>(f)).ToList();
+                Films = res.Select(f => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Film, Film>(f)).ToList();
             }
         }
 

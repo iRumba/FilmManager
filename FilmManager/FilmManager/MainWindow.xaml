@@ -13,8 +13,20 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{StaticResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded"
+        >
+    <!--<Window.Style>
+        <Style TargetType="Window" BasedOn="{StaticResource {x:Type Window}}">
+            <Setter Property="IsHitTestVisible" Value="True"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding DataLoading}" Value="True">
+                    <Setter Property="IsHitTestVisible" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Style>-->
     <Window.Resources>
+        <local:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <Style TargetType="Button" x:Key="FuncButton" BasedOn="{StaticResource {x:Type Button}}">
             <!--<Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="White"/>
@@ -27,7 +39,9 @@
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
-
+    <Window.IsHitTestVisible>
+        <Binding Path="DataLoading" Converter="{StaticResource InverseBoolConverter}"/>
+    </Window.IsHitTestVisible>
     <Grid>
         
         <DockPanel>
@@ -104,16 +118,19 @@
                 <local:FilterComboBox Header="Рейтинг"/>
                 <local:FilterComboBox Header="Нравится"/>--><!--
             </WrapPanel>-->
-            <WrapPanel DockPanel.Dock="Bottom" Margin="5">
-                <ComboBox SelectedItem="{Binding ItemsPerPage}" Width="50" Margin="0,0,10,0">
-                    <sys:Int32>1</sys:Int32>
-                    <sys:Int32>5</sys:Int32>
-                    <sys:Int32>15</sys:Int32>
-                    <sys:Int32>25</sys:Int32>
-                    <sys:Int32>50</sys:Int32>
-                </ComboBox>
-                <local:PageCounter PagesCount="{Binding TotalPages}" CurrentPage="{Binding CurrentPage}"/>
-            </WrapPanel>
+            <mat:Card Margin="5" DockPanel.Dock="Bottom" Padding="5">
+                <WrapPanel>
+                    <ComboBox SelectedItem="{Binding ItemsPerPage}" Width="50" Margin="0,0,10,0">
+                        <sys:Int32>1</sys:Int32>
+                        <sys:Int32>5</sys:Int32>
+                        <sys:Int32>15</sys:Int32>
+                        <sys:Int32>25</sys:Int32>
+                        <sys:Int32>50</sys:Int32>
+                    </ComboBox>
+                    <local:PageCounter PagesCount="{Binding TotalPages}" CurrentPage="{Binding CurrentPage}"/>
+                </WrapPanel>
+            </mat:Card>
+
             <DataGrid ItemsSource="{Binding Films}" AutoGenerateColumns="False" CanUserAddRows="False" 
                       CanUserDeleteRows="False" IsReadOnly="True">
                 <DataGrid.Columns>
@@ -149,5 +166,17 @@
 
 
         </DockPanel>
+        <Border Background="Gray" Opacity="0.5" d:DataContext="">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DataLoading}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
     </Grid>
 </Window>

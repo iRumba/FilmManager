@@ -28,6 +28,7 @@ namespace FilmManager
             _visiblePages = new ObservableCollection<int>();
             VisiblePages = new ReadOnlyObservableCollection<int>(_visiblePages);
             InitializeComponent();
+            RebuildVisiblePages();
         }
 
 
@@ -151,7 +152,7 @@ namespace FilmManager
         {
             get
             {
-                return Math.Max(CurrentPage - VisiblePagesCount, 1);
+                return Math.Max(CurrentPage - (VisiblePagesCount * 2 - Math.Min(PagesCount - CurrentPage, VisiblePagesCount)), 1);
             }
         }
 
@@ -159,23 +160,39 @@ namespace FilmManager
         {
             get
             {
-                return Math.Min(CurrentPage + VisiblePagesCount, PagesCount);
+                return Math.Min(CurrentPage + (VisiblePagesCount * 2 - Math.Min(CurrentPage - 1, VisiblePagesCount)), PagesCount);
             }
         }
 
-        public bool FirstButtonEnabled
+        public bool CurrentPageIsFirst
         {
             get
             {
-                return ActualFirstVisible > 1;
+                return CurrentPage == 1;
             }
         }
 
-        public bool LastButtonEnabled
+        public bool CurrentPageIsLast
         {
             get
             {
-                return ActualLastVisible < PagesCount;
+                return CurrentPage == PagesCount;
+            }
+        }
+
+        public bool FirstPageIsVisible
+        {
+            get
+            {
+                return ActualFirstVisible <= 1;
+            }
+        }
+
+        public bool LastPageIsVisible
+        {
+            get
+            {
+                return ActualLastVisible >= PagesCount;
             }
         }
 
@@ -231,13 +248,15 @@ namespace FilmManager
         void OnActualFirstVisibleChanged()
         {
             OnPropertyChanged(nameof(ActualFirstVisible));
-            OnPropertyChanged(nameof(FirstButtonEnabled));
+            OnPropertyChanged(nameof(CurrentPageIsFirst));
+            OnPropertyChanged(nameof(FirstPageIsVisible));
         }
 
         void OnActualLastVisibleChanged()
         {
             OnPropertyChanged(nameof(ActualLastVisible));
-            OnPropertyChanged(nameof(LastButtonEnabled));
+            OnPropertyChanged(nameof(CurrentPageIsLast));
+            OnPropertyChanged(nameof(LastPageIsVisible));
         }
 
         void OnPropertyChanged(string name)
@@ -247,7 +266,7 @@ namespace FilmManager
 
         void uc_Loaded(object sender, RoutedEventArgs e)
         {
-            RebuildVisiblePages();
+            
         }
 
         void Button_Click(object sender, RoutedEventArgs e)

@@ -15,9 +15,13 @@ namespace FilmManager.ViewModels
     {
         FilmManagerApplication _source;
 
+        bool _dataLoading;
+
         public RoutedCommand RefreshCommand { get; set; }
         public RoutedCommand SearchCommand { get; set; }
         public RoutedCommand ClearFiltersCommand { get; set; }
+
+
 
         public MainViewModel()
         {
@@ -140,16 +144,37 @@ namespace FilmManager.ViewModels
             }
         }
 
+        public bool DataLoading
+        {
+            get
+            {
+                return _dataLoading;
+            }
+
+            set
+            {
+                if (_dataLoading != value)
+                {
+                    _dataLoading = value;
+                    OnPropertyChanged(nameof(DataLoading));
+                }
+            }
+        }
+
         public void Refresh()
         {
+            DataLoading = true;
             _source.Refresh();
             UpdateValues();
+            DataLoading = false;
         }
 
         public async Task RefreshAsync()
         {
+            DataLoading = true;
             await _source.RefreshAsync();
             UpdateValues();
+            DataLoading = false;
         }
 
         //public void RefreshAdditionalData()

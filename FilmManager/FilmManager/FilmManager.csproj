@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="InverseBoolConverter.cs" />
     <Compile Include="PageCounter.xaml.cs">
       <DependentUpon>PageCounter.xaml</DependentUpon>
     </Compile>

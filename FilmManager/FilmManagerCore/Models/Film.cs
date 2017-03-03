@@ -207,13 +207,15 @@ namespace FilmManagerCore.Models
             Description = film.Description;
             FilmId = film.FilmId;
             ForeignUrl = film.ForeignUrl;
-            Genres = film.Genres;
             GlobalRating = film.GlobalRating;
             LocalName = film.LocalName;
             OriginalName = film.OriginalName;
             PosterUrl = film.PosterUrl;
             SelfRating = film.SelfRating;
             Year = film.Year;
+            Genres.Clear();
+            foreach (var genre in film.Genres)
+                Genres.Add(genre);
         }
     }
 }

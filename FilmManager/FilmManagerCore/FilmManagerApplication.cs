@@ -37,6 +37,14 @@ namespace FilmManagerCore
             }
         }
 
+        public List<Genre> AllGenres
+        {
+            get
+            {
+                return _filmDataAdapter.GetFilmGenres(false).Select(g => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Genre, Genre>(g)).ToList();
+            }
+        }
+
         public List<int> Years
         {
             get
@@ -115,7 +123,17 @@ namespace FilmManagerCore
 
         public void AddOrUpdateFilm(Film film)
         {
+            _filmDataAdapter.AddOrUpdateFilm(DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(film));
+        }
+
+        public void AddFilm(Film film)
+        {
             _filmDataAdapter.AddFilm(DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(film));
+        }
+
+        public async Task AddFilmAsync(Film film)
+        {
+            await Task.Run(() => { AddFilm(film); });
         }
 
         public void AddOrUpdateFilms(IEnumerable<Film> films)

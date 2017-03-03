@@ -46,6 +46,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -64,16 +65,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BoolToVisibilityConverter.cs" />
+    <Compile Include="BoolToVisibilityInverseConverter.cs" />
     <Compile Include="InverseBoolConverter.cs" />
     <Compile Include="PageCounter.xaml.cs">
       <DependentUpon>PageCounter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ValidUrlToVisibilityConverter.cs" />
+    <Compile Include="ViewModels\FilmEditVm.cs" />
     <Compile Include="ViewModels\FilmFiltersSet.cs" />
     <Compile Include="ViewModels\FilterDataVm.cs" />
     <Compile Include="ViewModels\FilterItemVm.cs" />
     <Compile Include="ViewModels\FilterSet.cs" />
+    <Compile Include="ViewModels\ImageVm.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MainVmAdditionalData.cs" />
+    <Compile Include="Wnd_FilmEditing.xaml.cs">
+      <DependentUpon>Wnd_FilmEditing.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -87,6 +96,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PageCounter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Wnd_FilmEditing.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,7 +119,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -124,6 +137,15 @@
       <Project>{498f0aa3-2163-4bac-971b-8da32c847f7a}</Project>
       <Name>FilmManagerCore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\image-missing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\clock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\loading.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

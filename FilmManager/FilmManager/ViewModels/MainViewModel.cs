@@ -15,12 +15,17 @@ namespace FilmManager.ViewModels
     {
         FilmManagerApplication _source;
 
+        ImageVm _imageSource;
+
         bool _dataLoading;
 
         public RoutedCommand RefreshCommand { get; set; }
         public RoutedCommand SearchCommand { get; set; }
         public RoutedCommand ClearFiltersCommand { get; set; }
-
+        public RoutedCommand EditFilmCommand { get; set; }
+        public RoutedCommand NewFilmCommand { get; set; }
+        public RoutedCommand ShowImageCommand { get; set; }
+        public RoutedCommand HideImageCommand { get; set; }
 
 
         public MainViewModel()
@@ -28,8 +33,10 @@ namespace FilmManager.ViewModels
             RefreshCommand = new RoutedCommand();
             SearchCommand = new RoutedCommand();
             ClearFiltersCommand = new RoutedCommand();
-
-
+            EditFilmCommand = new RoutedCommand();
+            NewFilmCommand = new RoutedCommand();
+            ShowImageCommand = new RoutedCommand();
+            HideImageCommand = new RoutedCommand();
 
             _source = new FilmManagerApplication(ConfigurationManager.AppSettings["connectionString"]);
             //AdditionalData = new MainVmAdditionalData();
@@ -41,6 +48,7 @@ namespace FilmManager.ViewModels
             Filters.SelfRatingChanged += Filters_SelfRatingChanged;
             Filters.RatingChanged += Filters_RatingChanged;
             CurrentPage = 1;
+            ImageSource = new ImageVm();
         }
 
         public string SearchText
@@ -161,6 +169,21 @@ namespace FilmManager.ViewModels
             }
         }
 
+        public Film SelectedFilm { get; set; }
+
+        public ImageVm ImageSource
+        {
+            get
+            {
+                return _imageSource;
+            }
+
+            set
+            {
+                _imageSource = value;
+            }
+        }
+
         public void Refresh()
         {
             DataLoading = true;
@@ -192,13 +215,42 @@ namespace FilmManager.ViewModels
             Filters.Years.SetData(_source.Years);
         }
 
-        public void ClearFilters()
+        internal void ClearFilters()
         {
             Filters.Genres.SelectedValue = null;
             Filters.Years.SelectedValue = null;
             Filters.SelfRatings.SelectedValue = null;
             Filters.Ratings.SelectedValue = null;
             SearchText = string.Empty;
+        }
+
+        internal async Task EditFilmAsync(Film editFilm = null)
+        {
+            var editedFilm = editFilm ?? SelectedFilm;
+            
+            if (editedFilm != null)
+            {
+                var film = editedFilm.CreateCopy();
+                
+                var filmEditWnd = new Wnd_FilmEditing();
+                filmEditWnd.Source.Source = film;
+                filmEditWnd.Source.AllGenres = _source.AllGenres;
+                if (filmEditWnd.ShowDialog() == true)
+                {
+                    editedFilm.FillFrom(filmEditWnd.Source.Source);
+                    await _source.AddOrUpdateFilmAsync(editedFilm);
+                }
+            }
+        }
+
+        internal async Task AddFilmAsync()
+        {
+            var filmEditWnd = new Wnd_FilmEditing();
+            filmEditWnd.Source.AllGenres = _source.AllGenres;
+            if (filmEditWnd.ShowDialog() == true)
+            {
+                await _source.AddFilmAsync(filmEditWnd.Source.Source);
+            }
         }
     }
 }

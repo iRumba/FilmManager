@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FilmManager.ViewModels;
 using FilmManagerCore;
+using FilmManagerCore.Models;
 
 namespace FilmManager
 {
@@ -39,9 +41,72 @@ namespace FilmManager
             clearFilters.CanExecute += ClearFiltersCommand_CanExecute;
             clearFilters.Executed += ClearFiltersCommand_Executed;
 
+            var editFilm = new CommandBinding(Source.EditFilmCommand);
+            editFilm.CanExecute += EditFilm_CanExecute;
+            editFilm.Executed += EditFilm_Executed;
+
+            var newFilm = new CommandBinding(Source.NewFilmCommand);
+            newFilm.CanExecute += NewFilm_CanExecute;
+            newFilm.Executed += NewFilm_Executed;
+
+            var showImage = new CommandBinding(Source.ShowImageCommand);
+            showImage.CanExecute += ShowImage_CanExecute;
+            showImage.Executed += ShowImage_Executed;
+
+            var hideImage = new CommandBinding(Source.HideImageCommand);
+            hideImage.CanExecute += HideImage_CanExecute;
+            hideImage.Executed += HideImage_Executed;
+
             CommandManager.RegisterClassCommandBinding(GetType(), refreshCommand);
             CommandManager.RegisterClassCommandBinding(GetType(), searchCommand);
             CommandManager.RegisterClassCommandBinding(GetType(), clearFilters);
+            CommandManager.RegisterClassCommandBinding(GetType(), editFilm);
+            CommandManager.RegisterClassCommandBinding(GetType(), newFilm);
+            CommandManager.RegisterClassCommandBinding(GetType(), showImage);
+            CommandManager.RegisterClassCommandBinding(GetType(), hideImage);
+        }
+
+        void HideImage_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Source.ImageSource.Hide();
+        }
+
+        void HideImage_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        async void ShowImage_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Parameter is string)
+            {
+                await Source.ImageSource.LoadImageAsync((string)e.Parameter);
+            }
+        }
+
+        void ShowImage_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        async void NewFilm_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            await Source.AddFilmAsync();
+        }
+
+        void NewFilm_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        async void EditFilm_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            await Source.EditFilmAsync(e.Parameter as Film);
+        }
+
+        void EditFilm_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = Source.SelectedFilm != null;
         }
 
         async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -73,7 +138,7 @@ namespace FilmManager
             await Source.RefreshAsync();
         }
 
-        private void SearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        void SearchCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }

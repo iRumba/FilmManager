@@ -94,6 +94,7 @@ namespace FilmDataLayer
         {
             Disposing.Invoke(this, new EventArgs());
             GC.SuppressFinalize(this);
+            GC.Collect();
         }
 
         void ClearCache()

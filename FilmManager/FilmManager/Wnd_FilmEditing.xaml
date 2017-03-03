@@ -1,0 +1,80 @@
+﻿<Window x:Class="FilmManager.Wnd_FilmEditing"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FilmManager"
+        xmlns:vm="clr-namespace:FilmManager.ViewModels"
+        xmlns:models="clr-namespace:FilmManagerCore.Models;assembly=FilmManagerCore"
+        xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        MinWidth="600" MinHeight="300" SizeToContent="Height"
+        Title="Wnd_FilmEditing" Height="300" Width="300">
+    <Window.Resources>
+        <!--<CollectionViewSource x:Key="genres" Source="{Binding GenresForChange}"/>-->
+        
+    </Window.Resources>
+    <Window.DataContext>
+        <vm:FilmEditVm />
+    </Window.DataContext>
+    <Grid>
+        <!--<DockPanel VerticalAlignment="Top">
+            <ItemsControl ItemsSource="{Binding GenresForChange}" DockPanel.Dock="Left">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBox Text="{Binding SearchString}" MinWidth="30" VerticalAlignment="Center">
+            </TextBox>
+            <Popup/>
+        </DockPanel>-->
+        <DockPanel Margin="5">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+                <Button Margin="5" Click="Button_Click">
+                    СОХРАНИТЬ
+                </Button>
+                <Button Margin="5" IsCancel="True" Click="Button_Click_1">
+                    ОТМЕНА
+                </Button>
+            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="10"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Оригинальное название: "/>
+                <TextBox Grid.Column="2" Text="{Binding OriginalName}"/>
+                <TextBlock Grid.Row="1" Text="Русское название: "/>
+                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding LocalName}"/>
+                <TextBlock Grid.Row="2" Text="Год: "/>
+                <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Year}"/>
+                <TextBlock Grid.Row="3" Text="Описание: "/>
+                <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Description}" MinLines="2"/>
+                <TextBlock Grid.Row="4" Text="Ссылка: "/>
+                <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding ForeignUrl}"/>
+                <TextBlock Grid.Row="5" Text="Ссылка на постер: "/>
+                <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding PosterUrl}"/>
+                <TextBlock Grid.Row="6" Text="Нравится: "/>
+                <mat:RatingBar Grid.Row="6" Grid.Column="2" Value="{Binding SelfRating, Mode=TwoWay}" Margin="5"/>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

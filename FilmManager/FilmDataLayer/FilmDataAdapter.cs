@@ -103,8 +103,6 @@ namespace FilmDataLayer
             }
         }
 
-
-
         FilmsContext CreateFilmContext()
         {
             var res = new FilmsContext(_connectionString);

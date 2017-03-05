@@ -35,6 +35,32 @@
             <Setter Property="mat:ShadowAssist.ShadowDepth" Value="Depth0"/>
             <Setter Property="Padding" Value="3"/>
         </Style>
+
+        <Style x:Key="AnimationImageStyle" TargetType="{x:Type Image}">
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <RotateTransform x:Name="rotateTransform"/>
+                    
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsVisible}" 
+                         Value="True">
+
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard Timeline.DesiredFrameRate="8">
+                                <DoubleAnimation By="45" To="360" IsAdditive="True" Storyboard.TargetProperty="RenderTransform.Angle" 
+                                                     Duration="0:0:1" RepeatBehavior="Forever">
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Window.DataContext>
         <vm:MainViewModel/>
@@ -110,6 +136,8 @@
                         <sys:Int32>50</sys:Int32>
                     </ComboBox>
                     <local:PageCounter PagesCount="{Binding TotalPages}" CurrentPage="{Binding CurrentPage}"/>
+                    <local:TagControl SelectedTags="{Binding TestStrings}">
+                    </local:TagControl>
                 </WrapPanel>
             </mat:Card>
 
@@ -215,26 +243,9 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
-                <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{StaticResource LoadingImage}" 
-                       Stretch="None" RenderTransformOrigin="0.5,0.5">
-                    <Image.RenderTransform>
-                        <RotateTransform x:Name="rotate"/>
-                    </Image.RenderTransform>
-                    <Image.Triggers>
-                        <EventTrigger RoutedEvent="Loaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                <DoubleAnimation By="45" To="360" Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" 
-                                                     Duration="0:0:2" RepeatBehavior="Forever" SpeedRatio="0.1">
-                                    <!--<DoubleAnimation.EasingFunction>
-                                        <ElasticEase EasingMode="EaseOut" Oscillations="6"></ElasticEase>
-                                    </DoubleAnimation.EasingFunction>-->
-                                </DoubleAnimation>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Image.Triggers>
-                </Image>
+            <Image VerticalAlignment="Center" HorizontalAlignment="Center" Source="{StaticResource LoadingImage}" 
+                       Stretch="None" RenderTransformOrigin="0.5,0.5" Style="{StaticResource AnimationImageStyle}">
+            </Image>
         </Border>
     </Grid>
 </Window>

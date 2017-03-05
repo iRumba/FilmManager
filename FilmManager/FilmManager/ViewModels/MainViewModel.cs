@@ -128,6 +128,8 @@ namespace FilmManager.ViewModels
             }
         }
 
+        public List<string> TestStrings { get; set; } = new List<string> { "qwe", "asd" };
+
         public int CurrentPage
         {
             get

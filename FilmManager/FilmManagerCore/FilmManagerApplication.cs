@@ -110,10 +110,19 @@ namespace FilmManagerCore
                     
                 else
                     res = query.GetResult().ToList();
-                    //query.SetPaginate(ItemsPerPage, CurrentPage);
-                 
-                Films = res.Select(f => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Film, Film>(f)).ToList();
+                //query.SetPaginate(ItemsPerPage, CurrentPage);
+
+                var results = res.Select(f => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Film, Film>(f)).ToList();
+                foreach(var film in results)
+                    film.SelfRatingChanged += Film_SelfRatingChanged;
+                Films = results;
+
             }
+        }
+
+        private async void Film_SelfRatingChanged(object sender, EventArgs e)
+        {
+            await AddOrUpdateFilmAsync((Film)sender);
         }
 
         public async Task RefreshAsync()

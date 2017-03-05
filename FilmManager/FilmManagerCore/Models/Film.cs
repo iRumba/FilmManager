@@ -23,6 +23,8 @@ namespace FilmManagerCore.Models
         float? _globalRating;
         string _foreignUrl;
 
+        public event EventHandler SelfRatingChanged;
+
         [DataMember]
         public long FilmId
         {
@@ -150,6 +152,7 @@ namespace FilmManagerCore.Models
                 {
                     _selfRating = value;
                     OnPropertyChanged(nameof(SelfRating));
+                    SelfRatingChanged?.Invoke(this, new EventArgs());
                 }
             }
         }
@@ -203,19 +206,20 @@ namespace FilmManagerCore.Models
 
         public void FillFrom(Film film)
         {
-            AddingDate = film.AddingDate;
-            Description = film.Description;
-            FilmId = film.FilmId;
-            ForeignUrl = film.ForeignUrl;
-            GlobalRating = film.GlobalRating;
-            LocalName = film.LocalName;
-            OriginalName = film.OriginalName;
-            PosterUrl = film.PosterUrl;
-            SelfRating = film.SelfRating;
-            Year = film.Year;
+            _addingDate = film._addingDate;
+            _description = film._description;
+            _filmId = film._filmId;
+            _foreignUrl = film._foreignUrl;
+            _globalRating = film._globalRating;
+            _localName = film._localName;
+            _originalName = film._originalName;
+            _posterUrl = film._posterUrl;
+            _selfRating = film._selfRating;
+            _year = film._year;
             Genres.Clear();
             foreach (var genre in film.Genres)
                 Genres.Add(genre);
+            OnPropertyChanged(string.Empty);
         }
     }
 }

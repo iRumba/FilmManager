@@ -71,6 +71,9 @@
     <Compile Include="PageCounter.xaml.cs">
       <DependentUpon>PageCounter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TagControl.xaml.cs">
+      <DependentUpon>TagControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ValidUrlToVisibilityConverter.cs" />
     <Compile Include="ViewModels\FilmEditVm.cs" />
     <Compile Include="ViewModels\FilmFiltersSet.cs" />
@@ -96,6 +99,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PageCounter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TagControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

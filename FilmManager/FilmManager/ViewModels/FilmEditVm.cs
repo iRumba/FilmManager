@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Input;
 using FilmManagerCore;
 using FilmManagerCore.Models;
 
@@ -17,9 +18,15 @@ namespace FilmManager.ViewModels
         ListCollectionView _genresForChange;
         SearchComparer _searchComparer;
         bool _genreTextBoxFocused;
+        string _genreText;
+
+        public RoutedCommand RemoveTagCommand { get; set; }
+        public RoutedCommand AddTagCommand { get; set; }
 
         public FilmEditVm()
         {
+            RemoveTagCommand = new RoutedCommand();
+            AddTagCommand = new RoutedCommand();
             _searchComparer = new SearchComparer();
         }
 
@@ -245,6 +252,26 @@ namespace FilmManager.ViewModels
             {
                 _genreTextBoxFocused = value;
                 OnPropertyChanged(nameof(IsPopupVisible));
+            }
+        }
+
+        public string GenreText
+        {
+            get
+            {
+                return _genreText;
+            }
+
+            set
+            {
+                if (_genreText == null)
+                    _genreText = string.Empty;
+                if (!_genreText.Equals(value, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    _genreText = value;
+                    OnPropertyChanged(nameof(GenreText));
+                }
+                
             }
         }
     }

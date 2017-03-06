@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using FilmManager.ViewModels;
+using FilmManagerCore.Models;
 
 namespace FilmManager
 {
@@ -23,6 +24,57 @@ namespace FilmManager
         public Wnd_FilmEditing()
         {
             InitializeComponent();
+
+            var removeTag = new CommandBinding(Source.RemoveTagCommand);
+            removeTag.Executed += RemoveTag_Executed;
+            removeTag.CanExecute += RemoveTag_CanExecute;
+
+            var addTag = new CommandBinding(Source.AddTagCommand);
+            addTag.CanExecute += AddTag_CanExecute;
+            addTag.Executed += AddTag_Executed;
+
+            CommandManager.RegisterClassCommandBinding(typeof(Wnd_FilmEditing), removeTag);
+            CommandManager.RegisterClassCommandBinding(typeof(Wnd_FilmEditing), addTag);
+        }
+
+        void AddTag_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Parameter is string)
+            {
+                var genreName = (string)e.Parameter;
+                var finded = Source.AllGenres.Find(g => g.Name.Equals(genreName, StringComparison.CurrentCultureIgnoreCase));
+                if (finded != null)
+                    Source.Genres.Add(finded);
+                else
+                    Source.Genres.Add(new Genre { Name = genreName });
+                Source.GenreText = string.Empty;
+            }
+        }
+
+        void AddTag_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+            if (e.Parameter is string)
+            {
+                var genreName = (string)e.Parameter;
+                if (string.IsNullOrWhiteSpace(genreName))
+                    return;
+
+                var finded = Source.Genres.FirstOrDefault(g => g.Name.Equals(genreName, StringComparison.CurrentCultureIgnoreCase));
+                if (finded == null)
+                    e.CanExecute = true;
+            }
+        }
+
+        void RemoveTag_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        void RemoveTag_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Parameter is Genre)
+                Source.Genres.Remove((Genre)e.Parameter);
         }
 
         public FilmEditVm Source
@@ -41,6 +93,14 @@ namespace FilmManager
         void Button_Click_1(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        void cmbNewTag_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Genre selectedGenre = null;
+            if (e.AddedItems.Count == 1 && (selectedGenre = e.AddedItems[0] as Genre) != null && ((ICommand)Source.AddTagCommand).CanExecute(selectedGenre.Name))
+                ((ICommand)Source.AddTagCommand).Execute(selectedGenre.Name);
+            ((ComboBox)sender).SelectedItem = null;
         }
     }
 }

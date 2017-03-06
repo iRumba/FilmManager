@@ -23,6 +23,18 @@ namespace FilmManagerCore
             Films = new List<Film>();
             PageCount = 1;
             ItemsPerPage = 25;
+            //_filmDataAdapter.AddFilm
+            //    (
+            //    new FilmDataLayer.Models.Film
+            //    {
+            //        LocalName = "qwe",
+            //        OriginalName = "asd",
+            //        Genres = new List<FilmDataLayer.Models.Genre>
+            //        {
+            //            new FilmDataLayer.Models.Genre {Name="Horror" }
+            //        }
+            //    }
+            //    );
         }
 
         public FilmFilters Filters { get; set; }

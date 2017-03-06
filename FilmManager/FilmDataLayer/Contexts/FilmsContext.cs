@@ -32,6 +32,9 @@ namespace FilmDataLayer.Contexts
                 m.MapRightKey("GenreId");
             });
             modelBuilder.Entity<Film>().Property(f => f.AddingDate).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Computed);
+            //modelBuilder.Entity<Film>().Property(f => f.FilmId).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
+            //modelBuilder.Entity<Genre>().Property(g => g.GenreId).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
+            //modelBuilder.Entity<Genre>().Property(g => g.Name).(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
         }
     }
 }

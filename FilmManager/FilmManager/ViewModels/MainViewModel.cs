@@ -15,6 +15,8 @@ namespace FilmManager.ViewModels
     {
         FilmManagerApplication _source;
 
+        Film _selectedFilm;
+
         ImageVm _imageSource;
 
         bool _dataLoading;
@@ -171,8 +173,21 @@ namespace FilmManager.ViewModels
             }
         }
 
-        public Film SelectedFilm { get; set; }
-
+        public Film SelectedFilm
+        {
+            get
+            {
+                return _selectedFilm;
+            }
+            set
+            {
+                if (SelectedFilm != value)
+                {
+                    _selectedFilm = value;
+                    OnPropertyChanged(nameof(SelectedFilm));
+                }
+            }
+        }
         public ImageVm ImageSource
         {
             get

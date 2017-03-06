@@ -61,12 +61,13 @@ namespace FilmDataLayer
         {
             using (var context = CreateFilmContext())
             {
-                context.Configuration.AutoDetectChangesEnabled = false;
-                foreach (var film in films)
-                {
-                    context.Films.AddOrUpdate(film);
-                }
-                context.ChangeTracker.DetectChanges();
+                context.Films.AddOrUpdate(films.ToArray());
+                //context.Configuration.AutoDetectChangesEnabled = false;
+                //foreach (var film in films)
+                //{
+                //    context.Films.AddOrUpdate(film);
+                //}
+                //context.ChangeTracker.DetectChanges();
                 context.SaveChanges();
             }
         }
@@ -75,12 +76,13 @@ namespace FilmDataLayer
         {
             using (var context = CreateFilmContext())
             {
-                context.Configuration.AutoDetectChangesEnabled = false;
-                foreach (var film in films)
-                {
-                    context.Films.Add(film);
-                }
-                context.ChangeTracker.DetectChanges();
+                context.Films.AddRange(films);
+                //context.Configuration.AutoDetectChangesEnabled = false;
+                //foreach (var film in films)
+                //{
+                //    context.Films.AddOrUpdate(film);
+                //}
+                //context.ChangeTracker.DetectChanges();
                 context.SaveChanges();
             }
         }
@@ -89,7 +91,12 @@ namespace FilmDataLayer
         {
             using (var context = CreateFilmContext())
             {
+                //context.Entry(film).State = EntityState.Added;
+                NormalizeContextForUpdate(context, film);
                 context.Films.Add(film);
+                //foreach (var genre in film.Genres)
+                //    context.Genres.AddOrUpdate(genre);
+                //context.ChangeTracker.DetectChanges();
                 context.SaveChanges();
             }
         }
@@ -98,6 +105,7 @@ namespace FilmDataLayer
         {
             using (var context = CreateFilmContext())
             {
+                NormalizeContextForUpdate(context, film);
                 context.Films.AddOrUpdate(film);
                 context.SaveChanges();
             }
@@ -107,6 +115,25 @@ namespace FilmDataLayer
         {
             var res = new FilmsContext(_connectionString);
             return res;
+        }
+
+        void NormalizeContextForUpdate(FilmsContext context, params Film[] films)
+        {
+            //var genreNames = new List<string>();
+            var genres = new List<Genre>();
+            foreach(var film in films)
+            {
+                //context.Films.Where(f => f.FilmId == film.FilmId).Include(f => f.Genres).Load();
+                genres.AddRange(film.Genres);
+                //genreNames.AddRange(film.Genres.Select(g=>g.Name));
+            }
+            var genreNames = genres.Select(g => g.Name);
+            var distGenres = genreNames.Distinct(StringComparer.CurrentCultureIgnoreCase);
+            var selGenres = context.Genres.Where(g => genreNames.Contains(g.Name)).ToList();
+            var addedGenres = distGenres.Except(selGenres.Select(g => g.Name));
+            foreach (var genre in genres)
+                if (addedGenres.Contains(genre.Name, StringComparer.CurrentCultureIgnoreCase))
+                    context.Entry(genre).State = EntityState.Added;
         }
     }
 }

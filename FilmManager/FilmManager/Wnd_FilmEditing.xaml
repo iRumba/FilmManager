@@ -7,9 +7,11 @@
         xmlns:vm="clr-namespace:FilmManager.ViewModels"
         xmlns:models="clr-namespace:FilmManagerCore.Models;assembly=FilmManagerCore"
         xmlns:mat="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        MinWidth="600" MinHeight="300" SizeToContent="Height"
-        Title="Wnd_FilmEditing" Height="300" Width="300">
+        MinWidth="600" MinHeight="350" SizeToContent="Height"
+        Title="Wnd_FilmEditing" Height="300" Width="300"
+        Name="wndFilmEdit">
     <Window.Resources>
         <!--<CollectionViewSource x:Key="genres" Source="{Binding GenresForChange}"/>-->
         
@@ -44,37 +46,89 @@
                     ОТМЕНА
                 </Button>
             </StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="10"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="Оригинальное название: "/>
-                <TextBox Grid.Column="2" Text="{Binding OriginalName}"/>
-                <TextBlock Grid.Row="1" Text="Русское название: "/>
-                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding LocalName}"/>
-                <TextBlock Grid.Row="2" Text="Год: "/>
-                <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Year}"/>
-                <TextBlock Grid.Row="3" Text="Описание: "/>
-                <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Description}" MinLines="2"/>
-                <TextBlock Grid.Row="4" Text="Ссылка: "/>
-                <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding ForeignUrl}"/>
-                <TextBlock Grid.Row="5" Text="Ссылка на постер: "/>
-                <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding PosterUrl}"/>
-                <TextBlock Grid.Row="6" Text="Нравится: "/>
-                <mat:RatingBar Grid.Row="6" Grid.Column="2" Value="{Binding SelfRating, Mode=TwoWay}" Margin="5"/>
-            </Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Оригинальное название: "/>
+                    <TextBox Grid.Column="2" Text="{Binding OriginalName}"/>
+                    <TextBlock Grid.Row="1" Text="Русское название: "/>
+                    <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding LocalName}"/>
+                    <TextBlock Grid.Row="2" Text="Год: "/>
+                    <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Year}"/>
+                    <TextBlock Grid.Row="3" Text="Жанры: "/>
+                    <Grid Grid.Row="3" Grid.Column="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ItemsControl ItemsSource="{Binding Genres}"
+                      VerticalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="2" Background="AliceBlue" BorderBrush="Gray" BorderThickness="1"
+                            VerticalAlignment="Center" Margin="3">
+                                        <DockPanel VerticalAlignment="Center">
+                                            <Button DockPanel.Dock="Right" Command="{Binding DataContext.RemoveTagCommand, ElementName=wndFilmEdit}"
+                                    CommandParameter="{Binding}" Padding="3" VerticalAlignment="Center"
+                                    Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=Self}}"
+                                    Margin="2,0,0,0" mat:ShadowAssist.ShadowDepth="Depth0">
+                                                <mat:PackIcon Kind="Close" Width="10" Height="10"/>
+                                            </Button>
+                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ComboBox IsTextSearchCaseSensitive="False" IsTextSearchEnabled="True" IsEditable="True"
+                                  DisplayMemberPath="Name" TextSearch.TextPath="Name"
+                                  ItemsSource="{Binding AllGenres}" MinWidth="100" Name="cmbNewTag"
+                                  Grid.Column="1"
+                                  Text="{Binding GenreText}"
+                                  SelectionChanged="cmbNewTag_SelectionChanged">
+                            <!--<i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding AddTagCommand}" 
+                                                           CommandParameter="{Binding SelectedItem.Name, ElementName=cmbNewTag}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>-->
+
+                            <ComboBox.InputBindings>
+                                <KeyBinding Key="Return" Command="{Binding AddTagCommand}"
+                            CommandParameter="{Binding Text, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBox}}"/>
+                            </ComboBox.InputBindings>
+                        </ComboBox>
+                    </Grid>
+                    <TextBlock Grid.Row="4" Text="Описание: "/>
+                    <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Description}" MinLines="2"/>
+                    <TextBlock Grid.Row="5" Text="Ссылка: "/>
+                    <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding ForeignUrl}"/>
+                    <TextBlock Grid.Row="6" Text="Ссылка на постер: "/>
+                    <TextBox Grid.Row="6" Grid.Column="2" Text="{Binding PosterUrl}"/>
+                    <TextBlock Grid.Row="7" Text="Нравится: "/>
+                    <mat:RatingBar Grid.Row="7" Grid.Column="2" Value="{Binding SelfRating, Mode=TwoWay}" Margin="5"/>
+                </Grid>
+
+            </ScrollViewer>
         </DockPanel>
     </Grid>
 </Window>

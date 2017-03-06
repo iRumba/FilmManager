@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,14 +21,68 @@ namespace FilmManager
     /// <summary>
     /// Логика взаимодействия для TagControl.xaml
     /// </summary>
-    public partial class TagControl : UserControl
+    public partial class TagControl : UserControl, INotifyPropertyChanged
     {
+        public RoutedCommand RemoveTagCommand { get; set; }
+        public RoutedCommand AddTagCommand { get; set; }
         public TagControl()
         {
+            RemoveTagCommand = new RoutedCommand();
+            AddTagCommand = new RoutedCommand();
+
+            var removeTag = new CommandBinding(RemoveTagCommand);
+            removeTag.Executed += RemoveTag_Executed;
+            removeTag.CanExecute += RemoveTag_CanExecute;
+
+            var addTag = new CommandBinding(AddTagCommand);
+            addTag.CanExecute += AddTag_CanExecute;
+            addTag.Executed += AddTag_Executed;
+
+
             InitializeComponent();
+            CommandManager.RegisterClassCommandBinding(typeof(TagControl), removeTag);
+            CommandManager.RegisterClassCommandBinding(typeof(TagControl), addTag);
+            
         }
 
+        void RemoveTag_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
 
+        void AddTag_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Parameter is string)
+            {
+                var tag = (string)e.Parameter;
+                SelectedTags.Add(tag);
+                cmbNewTag.Text = string.Empty;
+            }
+        }
+
+        void AddTag_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+            if (e.Parameter is string)
+            {
+                var tag = (string)e.Parameter;
+                if (!string.IsNullOrWhiteSpace(tag))
+                    e.CanExecute = true;
+            }
+        }
+
+        void RemoveTag_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Parameter is string)
+            {
+                var tag = (string)e.Parameter;
+                var col = new List<string>();
+                SelectedTags.Remove(tag);
+                col.AddRange(SelectedTags);
+                SelectedTags = col;
+                OnPropertyChanged(nameof(SelectedTags));
+            }
+        }
 
         public bool AllowAdding
         {
@@ -35,7 +90,6 @@ namespace FilmManager
             set { SetValue(AllowAddingProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for AllowAdding.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AllowAddingProperty =
             DependencyProperty.Register("AllowAdding", typeof(bool), typeof(TagControl), new PropertyMetadata(true));
 
@@ -47,7 +101,6 @@ namespace FilmManager
             set { SetValue(AllTagsProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for AllTags.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty AllTagsProperty =
             DependencyProperty.Register("AllTags", typeof(IEnumerable<string>), typeof(TagControl), new PropertyMetadata(null));
 
@@ -59,7 +112,6 @@ namespace FilmManager
             set { SetValue(SelectedTagsProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for SelectedTags.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectedTagsProperty =
             DependencyProperty.Register("SelectedTags", typeof(IList<string>), typeof(TagControl), new PropertyMetadata(null));
 
@@ -71,10 +123,14 @@ namespace FilmManager
             set { SetValue(TextProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(TagControl), new PropertyMetadata(string.Empty));
 
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        void OnPropertyChanged(string name)
+        {
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 }

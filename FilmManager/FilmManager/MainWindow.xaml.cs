@@ -106,7 +106,8 @@ namespace FilmManager
 
         void EditFilm_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Source.SelectedFilm != null;
+            var film = e.Parameter as Film;
+            e.CanExecute = film != null;
         }
 
         async void Window_Loaded(object sender, RoutedEventArgs e)

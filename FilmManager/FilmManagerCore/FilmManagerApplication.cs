@@ -134,7 +134,7 @@ namespace FilmManagerCore
 
         private async void Film_SelfRatingChanged(object sender, EventArgs e)
         {
-            await AddOrUpdateFilmAsync((Film)sender);
+            await AddOrUpdateFilmsAsync((Film)sender);
         }
 
         public async Task RefreshAsync()
@@ -142,32 +142,32 @@ namespace FilmManagerCore
             await Task.Run((Action)Refresh);
         }
 
-        public void AddOrUpdateFilm(Film film)
+        //public void AddOrUpdateFilm(Film film)
+        //{
+        //    _filmDataAdapter.AddOrUpdateFilms(DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(film));
+        //}
+
+        //public void AddFilm(Film film)
+        //{
+        //    _filmDataAdapter.AddOrUpdateFilms(DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(film));
+        //}
+
+        //public async Task AddFilmAsync(Film film)
+        //{
+        //    await Task.Run(() => { AddFilm(film); });
+        //}
+
+        public void AddOrUpdateFilms(params Film[] films)
         {
-            _filmDataAdapter.AddOrUpdateFilm(DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(film));
+            _filmDataAdapter.AddOrUpdateFilms(films.Select(f => DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(f)).ToArray());
         }
 
-        public void AddFilm(Film film)
-        {
-            _filmDataAdapter.AddFilm(DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(film));
-        }
+        //public async Task AddOrUpdateFilmAsync(Film film)
+        //{
+        //    await Task.Run(() => { AddOrUpdateFilm(film); });
+        //}
 
-        public async Task AddFilmAsync(Film film)
-        {
-            await Task.Run(() => { AddFilm(film); });
-        }
-
-        public void AddOrUpdateFilms(IEnumerable<Film> films)
-        {
-            _filmDataAdapter.AddFilms(films.Select(f => DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(f)));
-        }
-
-        public async Task AddOrUpdateFilmAsync(Film film)
-        {
-            await Task.Run(() => { AddOrUpdateFilm(film); });
-        }
-
-        public async Task AddOrUpdateFilmsAsync(IEnumerable<Film> films)
+        public async Task AddOrUpdateFilmsAsync(params Film[] films)
         {
             await Task.Run(() => { AddOrUpdateFilms(films); });
         }

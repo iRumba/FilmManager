@@ -255,7 +255,7 @@ namespace FilmManager.ViewModels
                 if (filmEditWnd.ShowDialog() == true)
                 {
                     editedFilm.FillFrom(filmEditWnd.Source.Source);
-                    await _source.AddOrUpdateFilmAsync(editedFilm);
+                    await _source.AddOrUpdateFilmsAsync(editedFilm);
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace FilmManager.ViewModels
             filmEditWnd.Source.AllGenres = _source.AllGenres;
             if (filmEditWnd.ShowDialog() == true)
             {
-                await _source.AddFilmAsync(filmEditWnd.Source.Source);
+                await _source.AddOrUpdateFilmsAsync(filmEditWnd.Source.Source);
             }
         }
     }

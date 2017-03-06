@@ -36,5 +36,39 @@ namespace FilmDataLayer.Models
         {
             Genres = new List<Genre>();
         }
+
+        public void CopyFrom(Film film)
+        {
+
+            FilmId = film.FilmId;
+            AddingDate = film.AddingDate;
+            Description = film.Description;
+            ForeignUrl = film.ForeignUrl;
+            GlobalRating = film.GlobalRating;
+            LocalName = film.LocalName;
+            OriginalName = film.OriginalName;
+            PosterUrl = film.PosterUrl;
+            SelfRating = film.SelfRating;
+            Year = film.Year;
+
+            List<Genre> findedAndAddedGenres = new List<Genre>();
+            foreach (var genre in film.Genres)
+            {
+                Genre genreById = null;
+                if ((genreById = Genres.FirstOrDefault(g=>g.GenreId == genre.GenreId)) != null)
+                {
+                    if (genreById.Name != genre.Name)
+                        genreById.Name = genre.Name;
+                    findedAndAddedGenres.Add(genreById);
+                }
+                else
+                {
+                    Genres.Add(genre);
+                    findedAndAddedGenres.Add(genre);
+                }
+            }
+
+            Genres.RemoveAll(r => !findedAndAddedGenres.Contains(r));
+        }
     }
 }

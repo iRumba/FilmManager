@@ -69,6 +69,7 @@
     <Compile Include="BoolToVisibilityConverter.cs" />
     <Compile Include="BoolToVisibilityInverseConverter.cs" />
     <Compile Include="InverseBoolConverter.cs" />
+    <Compile Include="Notifier.cs" />
     <Compile Include="PageCounter.xaml.cs">
       <DependentUpon>PageCounter.xaml</DependentUpon>
     </Compile>
@@ -78,12 +79,15 @@
     <Compile Include="ValidUrlToVisibilityConverter.cs" />
     <Compile Include="ViewModels\FilmEditVm.cs" />
     <Compile Include="ViewModels\FilmFiltersSet.cs" />
+    <Compile Include="ViewModels\FilmVm.cs" />
     <Compile Include="ViewModels\FilterDataVm.cs" />
     <Compile Include="ViewModels\FilterItemVm.cs" />
     <Compile Include="ViewModels\FilterSet.cs" />
+    <Compile Include="ViewModels\GenreVm.cs" />
     <Compile Include="ViewModels\ImageVm.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MainVmAdditionalData.cs" />
+    <Compile Include="ViewModels\ModelReflection.cs" />
     <Compile Include="Wnd_FilmEditing.xaml.cs">
       <DependentUpon>Wnd_FilmEditing.xaml</DependentUpon>
     </Compile>

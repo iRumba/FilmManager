@@ -99,11 +99,11 @@ namespace FilmManager.ViewModels
 
         public FilmFiltersSet Filters { get; set; }
 
-        public List<Film> Films
+        public List<FilmVm> Films
         {
             get
             {
-                return _source.Films;
+                return _source.Films.Select(f=>new FilmVm(f)).ToList();
             }
         }
 
@@ -124,11 +124,11 @@ namespace FilmManager.ViewModels
             }
         }
 
-        public List<Genre> UsedGenres
+        public List<GenreVm> UsedGenres
         {
             get
             {
-                return _source.UsedGenres;
+                return _source.UsedGenres.Select(g=>new GenreVm(g)).ToList();
             }
         }
 
@@ -249,14 +249,14 @@ namespace FilmManager.ViewModels
             
             if (editedFilm != null)
             {
-                var film = editedFilm.CreateCopy();
+                //var film = editedFilm.CreateCopy();
                 
                 var filmEditWnd = new Wnd_FilmEditing();
-                filmEditWnd.Source.Source = film;
+                filmEditWnd.Source.Film = film;
                 filmEditWnd.Source.AllGenres = _source.AllGenres;
                 if (filmEditWnd.ShowDialog() == true)
                 {
-                    editedFilm.FillFrom(filmEditWnd.Source.Source);
+                    editedFilm.FillFrom(filmEditWnd.Source.Film);
                     await _source.AddOrUpdateFilmsAsync(editedFilm);
                 }
             }
@@ -268,7 +268,7 @@ namespace FilmManager.ViewModels
             filmEditWnd.Source.AllGenres = _source.AllGenres;
             if (filmEditWnd.ShowDialog() == true)
             {
-                await _source.AddOrUpdateFilmsAsync(filmEditWnd.Source.Source);
+                await _source.AddOrUpdateFilmsAsync(filmEditWnd.Source.Film);
             }
         }
 

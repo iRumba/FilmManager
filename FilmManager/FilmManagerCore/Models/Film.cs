@@ -6,10 +6,12 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using FilmDataLayer.Models;
+using DbModels = FilmDataLayer.Models;
 
 namespace FilmManagerCore.Models
 {
-    public class Film : Notifier
+    public class Film : DbModelReflection<DbModels.Film>
     {
         long _filmId;
         string _originalName;
@@ -22,8 +24,8 @@ namespace FilmManagerCore.Models
         float? _globalRating;
         string _foreignUrl;
 
-        public event EventHandler SelfRatingChanged;
-        
+        //public event EventHandler SelfRatingChanged;
+
         public long FilmId
         {
             get
@@ -35,11 +37,11 @@ namespace FilmManagerCore.Models
                 if (_filmId != value)
                 {
                     _filmId = value;
-                    OnPropertyChanged(nameof(FilmId));
+                    OnChanged();
                 }
             }
         }
-        
+
         public string OriginalName
         {
             get
@@ -48,14 +50,14 @@ namespace FilmManagerCore.Models
             }
             set
             {
-                if(_originalName!= value)
+                if (_originalName != value)
                 {
                     _originalName = value;
-                    OnPropertyChanged(nameof(OriginalName));
+                    OnChanged();
                 }
             }
         }
-        
+
         public string LocalName
         {
             get
@@ -67,10 +69,11 @@ namespace FilmManagerCore.Models
                 if (_localName != value)
                 {
                     _localName = value;
-                    OnPropertyChanged(nameof(LocalName));
+                    OnChanged();
                 }
             }
         }
+
         public int? Year
         {
             get
@@ -82,10 +85,11 @@ namespace FilmManagerCore.Models
                 if (_year != value)
                 {
                     _year = value;
-                    OnPropertyChanged(nameof(Year));
+                    OnChanged();
                 }
             }
         }
+
         public DateTime AddingDate
         {
             get
@@ -97,10 +101,11 @@ namespace FilmManagerCore.Models
                 if (_addingDate != value)
                 {
                     _addingDate = value;
-                    OnPropertyChanged(nameof(AddingDate));
+                    OnChanged();
                 }
             }
         }
+
         public string Description
         {
             get
@@ -112,10 +117,11 @@ namespace FilmManagerCore.Models
                 if (_description != value)
                 {
                     _description = value;
-                    OnPropertyChanged(nameof(Description));
+                    OnChanged();
                 }
             }
         }
+
         public string PosterUrl
         {
             get
@@ -127,10 +133,11 @@ namespace FilmManagerCore.Models
                 if (_posterUrl != value)
                 {
                     _posterUrl = value;
-                    OnPropertyChanged(nameof(PosterUrl));
+                    OnChanged();
                 }
             }
         }
+
         public int SelfRating
         {
             get
@@ -142,11 +149,12 @@ namespace FilmManagerCore.Models
                 if (_selfRating != value)
                 {
                     _selfRating = value;
-                    OnPropertyChanged(nameof(SelfRating));
-                    SelfRatingChanged?.Invoke(this, new EventArgs());
+                    OnChanged();
+                    //SelfRatingChanged?.Invoke(this, new EventArgs());
                 }
             }
         }
+
         public float? GlobalRating
         {
             get
@@ -158,10 +166,11 @@ namespace FilmManagerCore.Models
                 if (_globalRating != value)
                 {
                     _globalRating = value;
-                    OnPropertyChanged(nameof(GlobalRating));
+                    OnChanged();
                 }
             }
         }
+
         public string ForeignUrl
         {
             get
@@ -173,41 +182,72 @@ namespace FilmManagerCore.Models
                 if (_foreignUrl != value)
                 {
                     _foreignUrl = value;
-                    OnPropertyChanged(nameof(ForeignUrl));
+                    OnChanged();
                 }
             }
         }
-        
-        public ObservableCollection<Genre> Genres { get; internal set; }
 
-        public Film()
+        public List<Genre> Genres { get; set; }
+
+        public Film(DbModels.Film source) : base(source) { }
+
+        public Film() : base(new DbModels.Film()) { }
+
+        //public Film CreateCopy()
+        //{
+        //    var res = new Film();
+        //    res.FillFrom(this);
+        //    return res;
+        //}
+
+        //public void FillFrom(Film film)
+        //{
+        //    _addingDate = film._addingDate;
+        //    _description = film._description;
+        //    _filmId = film._filmId;
+        //    _foreignUrl = film._foreignUrl;
+        //    _globalRating = film._globalRating;
+        //    _localName = film._localName;
+        //    _originalName = film._originalName;
+        //    _posterUrl = film._posterUrl;
+        //    _selfRating = film._selfRating;
+        //    _year = film._year;
+        //    Genres.Clear();
+        //    foreach (var genre in film.Genres)
+        //        Genres.Add(genre);
+        //    OnPropertyChanged(string.Empty);
+        //}
+
+        internal override void FillModel()
         {
-            Genres = new ObservableCollection<Genre>();
+            _source.FilmId = FilmId;
+            _source.AddingDate = AddingDate;
+            _source.Description = Description;
+            _source.ForeignUrl = ForeignUrl;
+            _source.GlobalRating = GlobalRating;
+            _source.LocalName = LocalName;
+            _source.OriginalName = OriginalName;
+            _source.PosterUrl = PosterUrl;
+            _source.SelfRating = SelfRating;
+            _source.Year = Year;
+            _source.Genres = Genres?.Select(g => g.Source).ToList();
         }
 
-        public Film CreateCopy()
+        protected internal override void FillFromModel()
         {
-            var res = new Film();
-            res.FillFrom(this);
-            return res;
-        }
-
-        public void FillFrom(Film film)
-        {
-            _addingDate = film._addingDate;
-            _description = film._description;
-            _filmId = film._filmId;
-            _foreignUrl = film._foreignUrl;
-            _globalRating = film._globalRating;
-            _localName = film._localName;
-            _originalName = film._originalName;
-            _posterUrl = film._posterUrl;
-            _selfRating = film._selfRating;
-            _year = film._year;
-            Genres.Clear();
-            foreach (var genre in film.Genres)
-                Genres.Add(genre);
-            OnPropertyChanged(string.Empty);
+            BeginEdit();
+            FilmId = _source.FilmId;
+            AddingDate = _source.AddingDate;
+            Description = _source.Description;
+            ForeignUrl = _source.ForeignUrl;
+            GlobalRating = _source.GlobalRating;
+            LocalName = _source.LocalName;
+            OriginalName = _source.OriginalName;
+            PosterUrl = _source.PosterUrl;
+            SelfRating = _source.SelfRating;
+            Year = _source.Year;
+            Genres = _source.Genres?.Select(g => new Genre(g)).ToList();
+            EndEdit();
         }
     }
 }

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FilmManagerCore.Models
+namespace FilmManager.ViewModels
 {
-    public abstract class DbModelReflection<TDbModel> : Editable where TDbModel : class
+    public abstract class ModelReflection<TModel> : Notifier where TModel : class
     {
-        protected TDbModel _source;
+        protected TModel _source;
 
-        protected DbModelReflection(TDbModel source)
+        protected ModelReflection(TModel source)
         {
             _source = source;
             //Init();
@@ -18,9 +18,9 @@ namespace FilmManagerCore.Models
 
         protected internal abstract void FillFromModel();
 
-        internal abstract void FillModel();
+        protected internal abstract void FillModel();
 
-        public TDbModel Source
+        protected TModel Source
         {
             get
             {

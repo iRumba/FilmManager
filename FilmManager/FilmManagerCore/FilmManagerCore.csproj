@@ -45,18 +45,20 @@
     <Compile Include="Filters\FilmFilters.cs" />
     <Compile Include="Filters\FilterBase.cs" />
     <Compile Include="Models\DbModelReflection.cs" />
+    <Compile Include="Models\Editable.cs" />
     <Compile Include="Models\Film.cs" />
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Notifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serializers\DbToAppModelsConverter.cs" />
-    <Compile Include="Serializers\ModelsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FilmDataLayer\FilmDataLayer.csproj">
       <Project>{c875f646-b097-42ac-86ef-142a4898a93f}</Project>
       <Name>FilmDataLayer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Serializers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

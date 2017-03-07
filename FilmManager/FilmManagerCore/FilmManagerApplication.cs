@@ -90,14 +90,14 @@ namespace FilmManagerCore
                     query.AddFilter(f => f.GlobalRating >= Filters.Rating.Value);
                 if (Filters.SelfRating.HasValue)
                     query.AddFilter(f => f.SelfRating == Filters.SelfRating.Value);
-                //if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
-                //    query.AddFilter(f => f.LocalName.ToLower().Contains(Filters.TextFilter.ToLower()) ||
-                //    f.OriginalName.ToLower().Contains(Filters.TextFilter.ToLower()) ||
-                //    f.Description.ToLower().Contains(Filters.TextFilter.ToLower()));
                 if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
-                    query.AddFilter(f => f.LocalName.ToUpper().Contains(str) ||
-                    f.OriginalName.ToUpper().Contains(str) ||
-                    f.Description.ToUpper().Contains(str));
+                    query.AddFilter(f => f.LocalName.Contains(Filters.TextFilter) ||
+                    f.OriginalName.Contains(Filters.TextFilter) ||
+                    f.Description.Contains(Filters.TextFilter));
+                //if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
+                //    query.AddFilter(f => f.LocalName.ToUpper().Contains(str) ||
+                //    f.OriginalName.ToUpper().Contains(str) ||
+                //    f.Description.ToUpper().Contains(str));
                 //if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
                 //    query.AddFilter(f => f.LocalName.IndexOf(str,StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                 //    f.OriginalName.ToUpper().Contains(str) ||
@@ -132,7 +132,7 @@ namespace FilmManagerCore
             }
         }
 
-        private async void Film_SelfRatingChanged(object sender, EventArgs e)
+        async void Film_SelfRatingChanged(object sender, EventArgs e)
         {
             await AddOrUpdateFilmsAsync((Film)sender);
         }
@@ -170,6 +170,16 @@ namespace FilmManagerCore
         public async Task AddOrUpdateFilmsAsync(params Film[] films)
         {
             await Task.Run(() => { AddOrUpdateFilms(films); });
+        }
+
+        public void RemoveFilms(params Film[] films)
+        {
+            _filmDataAdapter.RemoveFilms(films.Select(f => DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(f)).ToArray());
+        }
+
+        public async Task RemoveFilmsAsync(params Film[] films)
+        {
+            await Task.Run(() => { RemoveFilms(films); });
         }
     }
 }

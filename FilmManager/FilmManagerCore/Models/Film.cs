@@ -9,7 +9,6 @@ using System.Xml.Serialization;
 
 namespace FilmManagerCore.Models
 {
-    [DataContract]
     public class Film : Notifier
     {
         long _filmId;
@@ -24,8 +23,7 @@ namespace FilmManagerCore.Models
         string _foreignUrl;
 
         public event EventHandler SelfRatingChanged;
-
-        [DataMember]
+        
         public long FilmId
         {
             get
@@ -41,8 +39,7 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-
-        [DataMember]
+        
         public string OriginalName
         {
             get
@@ -58,8 +55,7 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-
-        [DataMember]
+        
         public string LocalName
         {
             get
@@ -75,7 +71,6 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-        [DataMember]
         public int? Year
         {
             get
@@ -91,7 +86,6 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-        [DataMember]
         public DateTime AddingDate
         {
             get
@@ -107,7 +101,6 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-        [DataMember]
         public string Description
         {
             get
@@ -123,7 +116,6 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-        [DataMember]
         public string PosterUrl
         {
             get
@@ -139,7 +131,6 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-        [DataMember]
         public int SelfRating
         {
             get
@@ -156,7 +147,6 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-        [DataMember]
         public float? GlobalRating
         {
             get
@@ -172,7 +162,6 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-        [DataMember]
         public string ForeignUrl
         {
             get
@@ -188,8 +177,7 @@ namespace FilmManagerCore.Models
                 }
             }
         }
-
-        [DataMember]
+        
         public ObservableCollection<Genre> Genres { get; internal set; }
 
         public Film()

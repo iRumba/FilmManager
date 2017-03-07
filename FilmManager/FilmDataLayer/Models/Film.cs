@@ -7,31 +7,19 @@ using System.Threading.Tasks;
 
 namespace FilmDataLayer.Models
 {
-    [DataContract]
     public class Film
     {
-        [DataMember]
         public long FilmId { get; set; }
-        [DataMember]
         public string OriginalName { get; set; }
-        [DataMember]
         public string LocalName { get; set; }
-        [DataMember]
         public int? Year { get; set; }
-        [DataMember]
         public DateTime AddingDate { get; set; }
-        [DataMember]
         public string Description { get; set; }
-        [DataMember]
         public string PosterUrl { get; set; }
-        [DataMember]
         public int SelfRating { get; set; }
-        [DataMember]
         public float? GlobalRating { get; set; }
-        [DataMember]
         public string ForeignUrl { get; set; }
-        [DataMember]
-        public List<Genre> Genres { get; set; }
+        public virtual List<Genre> Genres { get; set; }
         public Film()
         {
             Genres = new List<Genre>();
@@ -51,7 +39,7 @@ namespace FilmDataLayer.Models
             SelfRating = film.SelfRating;
             Year = film.Year;
 
-            List<Genre> findedAndAddedGenres = new List<Genre>();
+            var findedAndAddedGenres = new List<Genre>();
             foreach (var genre in film.Genres)
             {
                 Genre genreById = null;

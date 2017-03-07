@@ -73,44 +73,60 @@ namespace FilmDataLayer
             }
         }
 
-        public void AddFilms(IEnumerable<Film> films)
+        public void RemoveFilms(params Film[] films)
         {
             using (var context = CreateFilmContext())
             {
-                context.Films.AddRange(films);
-                //context.Configuration.AutoDetectChangesEnabled = false;
-                //foreach (var film in films)
-                //{
-                //    context.Films.AddOrUpdate(film);
-                //}
-                //context.ChangeTracker.DetectChanges();
+                
+                foreach (var film in films)
+                {
+                    context.Films.Attach(film);
+                    context.Films.Remove(film);
+                    //context.Entry(film).State = EntityState.Deleted;
+                }
+                    
                 context.SaveChanges();
             }
         }
 
-        public void AddFilm(Film film)
-        {
-            using (var context = CreateFilmContext())
-            {
-                //context.Entry(film).State = EntityState.Added;
-                NormalizeContextForUpdate(context, film);
-                context.Films.Add(film);
-                //foreach (var genre in film.Genres)
-                //    context.Genres.AddOrUpdate(genre);
-                //context.ChangeTracker.DetectChanges();
-                context.SaveChanges();
-            }
-        }
+        //public void AddFilms(IEnumerable<Film> films)
+        //{
+        //    using (var context = CreateFilmContext())
+        //    {
+        //        context.Films.AddRange(films);
+        //        //context.Configuration.AutoDetectChangesEnabled = false;
+        //        //foreach (var film in films)
+        //        //{
+        //        //    context.Films.AddOrUpdate(film);
+        //        //}
+        //        //context.ChangeTracker.DetectChanges();
+        //        context.SaveChanges();
+        //    }
+        //}
 
-        public void AddOrUpdateFilm(Film film)
-        {
-            using (var context = CreateFilmContext())
-            {
-                NormalizeContextForUpdate(context, film);
-                context.Films.AddOrUpdate(film);
-                context.SaveChanges();
-            }
-        }
+        //public void AddFilm(Film film)
+        //{
+        //    using (var context = CreateFilmContext())
+        //    {
+        //        //context.Entry(film).State = EntityState.Added;
+        //        NormalizeContextForUpdate(context, film);
+        //        context.Films.Add(film);
+        //        //foreach (var genre in film.Genres)
+        //        //    context.Genres.AddOrUpdate(genre);
+        //        //context.ChangeTracker.DetectChanges();
+        //        context.SaveChanges();
+        //    }
+        //}
+
+        //public void AddOrUpdateFilm(Film film)
+        //{
+        //    using (var context = CreateFilmContext())
+        //    {
+        //        NormalizeContextForUpdate(context, film);
+        //        context.Films.AddOrUpdate(film);
+        //        context.SaveChanges();
+        //    }
+        //}
 
         FilmsContext CreateFilmContext()
         {
@@ -128,38 +144,53 @@ namespace FilmDataLayer
                 {
                     if (film.FilmId != default(long))
                     {
-                        var updatedFilm = context.Films.Include(f => f.Genres).FirstOrDefault(f => f.FilmId == film.FilmId);
-                        if (updatedFilm != null)
-                        {
-                            updatedFilm.CopyFrom(film);
-                            continue;
-                        }
+                        context.Entry(film).State = EntityState.Modified;
+                        //var updatedFilm = context.Films.Include(f => f.Genres).FirstOrDefault(f => f.FilmId == film.FilmId);
+                        //if (updatedFilm != null)
+                        //{
+                        //    updatedFilm.CopyFrom(film);
+                        //    context.Entry(updatedFilm).State = EntityState.Modified;
+                        //    continue;
+                        //}
                     }
-                    context.Films.Add(film);
-                    for(var i = 0; i<film.Genres.Count; i++)
+                    else
                     {
-                        var genre = film.Genres[i];
-                        context.Genres.AddOrUpdate(genre);
+                        context.Entry(film).State = EntityState.Added;
+                    }
+
+                    foreach (var genre in film.Genres)
+                    {
                         if (genre.GenreId != default(long))
                         {
-                            context.Genres.Where(g => g.GenreId == genre.GenreId).Include(g=>g.Films).Load();
-                            //context.Genres.Where(g => g.GenreId == genre.GenreId).Load();
-                            context.Genres.AddOrUpdate(genre);
-                            //if (genre.Name != findedGenre.Name)
-                            //{
-                            //    //findedGenre.Name = genre.Name;
-                            //    context.Entry(genre).State = EntityState.Modified;
-                            //}
-                            //else
-                            //{
-                            //    context.Genres.Attach(genre);
-                            //    //.Entry(genre).State = EntityState.Unchanged;
-                            //}
-
-                            //film.Genres[i] = findedGenre;
+                            var exists = context.Genres.Any(g => g.GenreId == genre.GenreId);
+                            //var addedGenre = context.Genres.FirstOrDefault(g => g.GenreId == genre.GenreId);
+                            if (exists)
+                                context.Entry(genre).State = EntityState.Unchanged;
+                            else
+                                context.Entry(genre).State = EntityState.Added;
                         }
                     }
-                }
+
+                        //for(var i = 0; i<film.Genres.Count; i++)
+                        //{
+                        //    var genre = film.Genres[i];
+                        //    context.Genres.AddOrUpdate(genre);
+                        //    if (genre.GenreId != default(long))
+                        //    {
+                        //        var addedGenre = context.Genres.FirstOrDefault(g => g.GenreId == genre.GenreId);
+                        //        if (addedGenre != null)
+                        //        {
+                        //            if (!string.Equals(addedGenre.Name, genre.Name, StringComparison.CurrentCultureIgnoreCase))
+                        //            {
+                        //                addedGenre.Name = genre.Name;
+                        //                context.Entry(addedGenre).State = EntityState.Modified;
+                        //            }
+
+                        //            film.Genres[i] = addedGenre;
+                        //        }
+                        //    }
+                        //}
+                    }
             }
             finally
             {

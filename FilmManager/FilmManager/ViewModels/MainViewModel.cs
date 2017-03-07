@@ -26,6 +26,7 @@ namespace FilmManager.ViewModels
         public RoutedCommand ClearFiltersCommand { get; set; }
         public RoutedCommand EditFilmCommand { get; set; }
         public RoutedCommand NewFilmCommand { get; set; }
+        public RoutedCommand RemoveFilmCommand { get; set; }
         public RoutedCommand ShowImageCommand { get; set; }
         public RoutedCommand HideImageCommand { get; set; }
 
@@ -39,6 +40,7 @@ namespace FilmManager.ViewModels
             NewFilmCommand = new RoutedCommand();
             ShowImageCommand = new RoutedCommand();
             HideImageCommand = new RoutedCommand();
+            RemoveFilmCommand = new RoutedCommand();
 
             _source = new FilmManagerApplication(ConfigurationManager.AppSettings["connectionString"]);
             //AdditionalData = new MainVmAdditionalData();
@@ -260,7 +262,7 @@ namespace FilmManager.ViewModels
             }
         }
 
-        internal async Task AddFilmAsync()
+        public async Task AddFilmAsync()
         {
             var filmEditWnd = new Wnd_FilmEditing();
             filmEditWnd.Source.AllGenres = _source.AllGenres;
@@ -268,6 +270,11 @@ namespace FilmManager.ViewModels
             {
                 await _source.AddOrUpdateFilmsAsync(filmEditWnd.Source.Source);
             }
+        }
+
+        public async Task RemoveFilmAsync(Film film)
+        {
+            await _source.RemoveFilmsAsync(film);
         }
     }
 }

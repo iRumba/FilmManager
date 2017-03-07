@@ -116,10 +116,15 @@
                     </mat:Card>
                     <mat:Card Margin="5">
                         <DockPanel>
-                            <Button Command="{Binding SearchCommand}">
+                            <Button Command="{Binding RefreshCommand}">
                                 <mat:PackIcon Kind="Magnify" VerticalAlignment="Stretch" Width="24" Height="24"/>
                             </Button>
-                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Name="searchBox" VerticalAlignment="Center" Margin="3,0"/>
+                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                     Name="searchBox" VerticalAlignment="Center" Margin="3,0">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding RefreshCommand}"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
                         </DockPanel>
                     </mat:Card>
                 </DockPanel>
@@ -135,8 +140,6 @@
                         <sys:Int32>50</sys:Int32>
                     </ComboBox>
                     <local:PageCounter PagesCount="{Binding TotalPages}" CurrentPage="{Binding CurrentPage}"/>
-                    <local:TagControl SelectedTags="{Binding TestStrings}">
-                    </local:TagControl>
                 </WrapPanel>
             </mat:Card>
 
@@ -191,6 +194,20 @@
                                     <mat:PackIcon Kind="TooltipImage" Width="24" Height="24">
                                     </mat:PackIcon>
                                 </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Действия">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Command="{Binding DataContext.EditFilmCommand, ElementName=wnd}" CommandParameter="{Binding}" >
+                                        <mat:PackIcon Kind="LeadPencil" VerticalAlignment="Stretch" Width="24" Height="24"/>
+                                    </Button>
+                                    <Button Command="{Binding DataContext.RemoveFilmCommand, ElementName=wnd}" CommandParameter="{Binding}" >
+                                        <mat:PackIcon Kind="Delete" VerticalAlignment="Stretch" Width="24" Height="24"/>
+                                    </Button>
+                                </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

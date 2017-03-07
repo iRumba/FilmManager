@@ -57,6 +57,10 @@ namespace FilmManager
             hideImage.CanExecute += HideImage_CanExecute;
             hideImage.Executed += HideImage_Executed;
 
+            var removeFilm = new CommandBinding(Source.RemoveFilmCommand);
+            removeFilm.CanExecute += RemoveFilm_CanExecute;
+            removeFilm.Executed += RemoveFilm_Executed;
+
             CommandManager.RegisterClassCommandBinding(GetType(), refreshCommand);
             CommandManager.RegisterClassCommandBinding(GetType(), searchCommand);
             CommandManager.RegisterClassCommandBinding(GetType(), clearFilters);
@@ -64,6 +68,25 @@ namespace FilmManager
             CommandManager.RegisterClassCommandBinding(GetType(), newFilm);
             CommandManager.RegisterClassCommandBinding(GetType(), showImage);
             CommandManager.RegisterClassCommandBinding(GetType(), hideImage);
+            CommandManager.RegisterClassCommandBinding(GetType(), removeFilm);
+        }
+
+        async void RemoveFilm_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            var film = e.Parameter as Film;
+            if (film != null)
+            {
+                await Source.RemoveFilmAsync(film);
+                await Source.RefreshAsync();
+            }
+        }
+
+        void RemoveFilm_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            Film param = null;
+            e.CanExecute = (param = e.Parameter as Film) != null && param.FilmId != default(long);
+            //if (!e.CanExecute)
+            //    Console.WriteLine(false);
         }
 
         void HideImage_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -92,6 +115,7 @@ namespace FilmManager
         async void NewFilm_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             await Source.AddFilmAsync();
+            await Source.RefreshAsync();
         }
 
         void NewFilm_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -102,6 +126,7 @@ namespace FilmManager
         async void EditFilm_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             await Source.EditFilmAsync(e.Parameter as Film);
+            await Source.RefreshAsync();
         }
 
         void EditFilm_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -125,9 +150,10 @@ namespace FilmManager
             }
         }
 
-        void ClearFiltersCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        async void ClearFiltersCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Source.ClearFilters();
+            await Source.RefreshAsync();
         }
 
         void ClearFiltersCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

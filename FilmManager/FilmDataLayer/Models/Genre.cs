@@ -8,15 +8,12 @@ using System.Xml.Serialization;
 
 namespace FilmDataLayer.Models
 {
-    [DataContract]
     public class Genre
     {
-        [DataMember]
         public long GenreId { get; set; }
-        [DataMember]
         public string Name { get; set; }
         [XmlIgnore]
-        public List<Film> Films { get; set; }
+        public virtual List<Film> Films { get; set; }
         public Genre()
         {
             Films = new List<Film>();

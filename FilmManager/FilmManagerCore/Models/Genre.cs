@@ -10,9 +10,7 @@ namespace FilmManagerCore.Models
 {
     public class Genre
     {
-        [DataMember]
         public long GenreId { get; set; }
-        [DataMember]
         public string Name { get; set; }
         [XmlIgnore]
         public List<Film> Films { get; set; }

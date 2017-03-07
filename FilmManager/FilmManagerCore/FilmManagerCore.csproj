@@ -44,11 +44,13 @@
     <Compile Include="FilmManagerApplication.cs" />
     <Compile Include="Filters\FilmFilters.cs" />
     <Compile Include="Filters\FilterBase.cs" />
+    <Compile Include="Models\DbModelReflection.cs" />
     <Compile Include="Models\Film.cs" />
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Notifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serializers\DbToAppModelsConverter.cs" />
+    <Compile Include="Serializers\ModelsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FilmDataLayer\FilmDataLayer.csproj">

@@ -46,7 +46,7 @@
                     ОТМЕНА
                 </Button>
             </StackPanel>
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" DataContext="{Binding Film}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
@@ -101,19 +101,19 @@
                         </ItemsControl>
                         <ComboBox IsTextSearchCaseSensitive="False" IsTextSearchEnabled="True" IsEditable="True"
                                   DisplayMemberPath="Name" TextSearch.TextPath="Name"
-                                  ItemsSource="{Binding AllGenres}" MinWidth="100" Name="cmbNewTag"
+                                  ItemsSource="{Binding DataContext.GenresForChange, ElementName=wndFilmEdit}" MinWidth="100" Name="cmbNewTag"
                                   Grid.Column="1"
-                                  Text="{Binding GenreText}"
+                                  Text="{Binding DataContext.GenreText, ElementName=wndFilmEdit}"
                                   SelectionChanged="cmbNewTag_SelectionChanged">
                             <!--<i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding AddTagCommand}" 
+                                    <i:InvokeCommandAction Command="{Binding DataContext.AddTagCommand, ElementName=wndFilmEdit}" 
                                                            CommandParameter="{Binding SelectedItem.Name, ElementName=cmbNewTag}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>-->
 
                             <ComboBox.InputBindings>
-                                <KeyBinding Key="Return" Command="{Binding AddTagCommand}"
+                                <KeyBinding Key="Return" Command="{Binding DataContext.AddTagCommand, ElementName=wndFilmEdit}"
                             CommandParameter="{Binding Text, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBox}}"/>
                             </ComboBox.InputBindings>
                         </ComboBox>

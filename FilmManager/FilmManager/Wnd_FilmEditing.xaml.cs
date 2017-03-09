@@ -44,9 +44,11 @@ namespace FilmManager
                 var genreName = (string)e.Parameter;
                 var finded = Source.AllGenres.Find(g => g.Name.Equals(genreName, StringComparison.CurrentCultureIgnoreCase));
                 if (finded != null)
+                {
                     Source.Genres.Add(finded);
+                }
                 else
-                    Source.Genres.Add(new Genre { Name = genreName });
+                    Source.Genres.Add(new GenreVm { Name = genreName });
                 Source.GenreText = string.Empty;
             }
         }
@@ -73,8 +75,8 @@ namespace FilmManager
 
         void RemoveTag_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (e.Parameter is Genre)
-                Source.Genres.Remove((Genre)e.Parameter);
+            if (e.Parameter is GenreVm)
+                Source.Genres.Remove((GenreVm)e.Parameter);
         }
 
         public FilmEditVm Source

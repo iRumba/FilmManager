@@ -104,38 +104,43 @@ this(valueSelector, textSelector, filterText, null, default(TValue), comparer)
 
             var newItems = source.Select(src => new FilterItemVm<TValue> { Value = _valueSelector(src), Text = _textSelector(src) }).ToList();
 
-            var ind = 0;
+            //var ind = 0;
             foreach (var item in newItems)
             {
                 var eq = _items.FirstOrDefault(i => _comparer.Equals(((FilterItemVm<TValue>)i).Value, item.Value));
                 if (eq != null)
                 {
-                    if (eq.Text != item.Text)
-                    {
-                        eq.Text = item.Text;
-                        //changed.Add((FilterItemVm<TValue>)eq);
-                    }
+                    eq.Text = item.Text;
+                    //changed.Add((FilterItemVm<TValue>)eq);
                     equals.Add((FilterItemVm<TValue>)eq);
                 }
                 else
                 {
                     added.Add(item);
                 }
-                ind++;
+                //ind++;
             }
 
             var concat = added.Concat(equals);
-
+            //var forDeleting = new List<FilterItemVm<TValue>>();
             foreach(var item in _items)
             {
                 if (!concat.Contains(item))
                 {
-                    ((List<FilterItemVm<TValue>>)_items).Remove((FilterItemVm<TValue>)item);
+                    //((List<FilterItemVm<TValue>>)_items).Remove((FilterItemVm<TValue>)item);
                     deleted.Add((FilterItemVm<TValue>)item);
                 }
             }
 
-            foreach(var item in added)
+            foreach(var item in deleted)
+            {
+                var index = ((List<FilterItemVm<TValue>>)_items).IndexOf(item);
+                ((List<FilterItemVm<TValue>>)_items).Remove(item);
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
+            }
+            //_items = _items.Except(deleted).ToList();
+
+            foreach (var item in added)
             {
                 ((List<FilterItemVm<TValue>>)_items).Insert(newItems.IndexOf(item), item);
             }
@@ -145,8 +150,8 @@ this(valueSelector, textSelector, filterText, null, default(TValue), comparer)
             if (added.Count > 0)
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
 
-            if (deleted.Count > 0)
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, deleted));
+            //if (deleted.Count > 0)
+            //    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, deleted));
              
             //CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             //OnPropertyChanged(nameof(SelectedValue));

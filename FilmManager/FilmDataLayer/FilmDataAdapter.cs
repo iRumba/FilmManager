@@ -61,6 +61,8 @@ namespace FilmDataLayer
         {
             using (var context = CreateFilmContext())
             {
+                //foreach (var film in films)
+                //    context.Films.Attach(film);
                 NormalizeContextForUpdate(context, films);
                 //context.Films.AddOrUpdate(films.ToArray());
                 //context.Configuration.AutoDetectChangesEnabled = false;

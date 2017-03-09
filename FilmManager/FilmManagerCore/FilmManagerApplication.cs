@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using FilmDataLayer;
 using FilmManagerCore.Filters;
 using FilmManagerCore.Models;
-using FilmManagerCore.Serializers;
 
 namespace FilmManagerCore
 {
@@ -45,7 +44,7 @@ namespace FilmManagerCore
         {
             get
             {
-                return _filmDataAdapter.GetFilmGenres(true).Select(g => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Genre, Genre>(g)).ToList();
+                return _filmDataAdapter.GetFilmGenres(true).Select(g => new Genre(g)).ToList();// DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Genre, Genre>(g)).ToList();
             }
         }
 
@@ -53,7 +52,7 @@ namespace FilmManagerCore
         {
             get
             {
-                return _filmDataAdapter.GetFilmGenres(false).Select(g => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Genre, Genre>(g)).ToList();
+                return _filmDataAdapter.GetFilmGenres(false).Select(g => new Genre(g)).ToList(); //g => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Genre, Genre>(g)).ToList();
             }
         }
 
@@ -124,12 +123,18 @@ namespace FilmManagerCore
                     res = query.GetResult().ToList();
                 //query.SetPaginate(ItemsPerPage, CurrentPage);
 
-                var results = res.Select(f => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Film, Film>(f)).ToList();
+                var results = res.Select(f => new Film(f)).ToList();// DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Film, Film>(f)).ToList();
                 foreach(var film in results)
-                    film.SelfRatingChanged += Film_SelfRatingChanged;
+                    film.Changed += Film_Changed;
+                    //film.SelfRatingChanged += Film_SelfRatingChanged;
                 Films = results;
 
             }
+        }
+
+        void Film_Changed(object sender, EventArgs e)
+        {
+            AddOrUpdateFilms((Film)sender);
         }
 
         async void Film_SelfRatingChanged(object sender, EventArgs e)
@@ -159,7 +164,7 @@ namespace FilmManagerCore
 
         public void AddOrUpdateFilms(params Film[] films)
         {
-            _filmDataAdapter.AddOrUpdateFilms(films.Select(f => DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(f)).ToArray());
+            _filmDataAdapter.AddOrUpdateFilms(films.Select(f => f.FillModel()).ToArray());// DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(f)).ToArray()); 
         }
 
         //public async Task AddOrUpdateFilmAsync(Film film)
@@ -174,7 +179,7 @@ namespace FilmManagerCore
 
         public void RemoveFilms(params Film[] films)
         {
-            _filmDataAdapter.RemoveFilms(films.Select(f => DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(f)).ToArray());
+            _filmDataAdapter.RemoveFilms(films.Select(f => f.Source).ToArray());//f => DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(f)).ToArray());
         }
 
         public async Task RemoveFilmsAsync(params Film[] films)

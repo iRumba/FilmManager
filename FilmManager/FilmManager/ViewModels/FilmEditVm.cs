@@ -16,8 +16,6 @@ namespace FilmManager.ViewModels
         FilmVm _film;
         List<GenreVm> _allGenres;
         ListCollectionView _genresForChange;
-        //SearchComparer _searchComparer;
-        bool _genreTextBoxFocused;
         string _genreText;
 
         public RoutedCommand RemoveTagCommand { get; set; }
@@ -27,162 +25,40 @@ namespace FilmManager.ViewModels
         {
             RemoveTagCommand = new RoutedCommand();
             AddTagCommand = new RoutedCommand();
-            //_searchComparer = new SearchComparer();
         }
 
         public FilmVm Film
         {
             get
             {
-                if (_film == null)
-                    _film = new FilmVm();
                 return _film;
             }
             set
             {
                 if (_film != value)
                 {
+                    if (_film!=null)
+                        _film.Genres.CollectionChanged -= Genres_CollectionChanged;
                     _film = value;
+                    _film.Genres.CollectionChanged += Genres_CollectionChanged;
                     OnPropertyChanged(nameof(Film));
+                    GenresForChange?.Refresh();
                 }
             }
         }
 
-        //public string OriginalName
-        //{
-        //    get
-        //    {
-        //        return Film.OriginalName;
-        //    }
-        //    set
-        //    {
-        //        if (Film.OriginalName != value)
-        //        {
-        //            Film.OriginalName = value;
-        //            OnPropertyChanged(nameof(OriginalName));
-        //        }
-        //    }
-        //}
+        void Genres_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            GenresForChange?.Refresh();
+        }
 
-        //public string LocalName
-        //{
-        //    get
-        //    {
-        //        return Film.LocalName;
-        //    }
-        //    set
-        //    {
-        //        if (Film.LocalName != value)
-        //        {
-        //            Film.LocalName = value;
-        //            OnPropertyChanged(nameof(LocalName));
-        //        }
-        //    }
-        //}
-
-        //public string Description
-        //{
-        //    get
-        //    {
-        //        return Film.Description;
-        //    }
-        //    set
-        //    {
-        //        if (Film.Description != value)
-        //        {
-        //            Film.Description = value;
-        //            OnPropertyChanged(nameof(Description));
-        //        }
-        //    }
-        //}
-
-        //public string ForeignUrl
-        //{
-        //    get
-        //    {
-        //        return Film.ForeignUrl;
-        //    }
-        //    set
-        //    {
-        //        if (Film.ForeignUrl != value)
-        //        {
-        //            Film.ForeignUrl = value;
-        //            OnPropertyChanged(nameof(ForeignUrl));
-        //        }
-        //    }
-        //}
-
-        //public string PosterUrl
-        //{
-        //    get
-        //    {
-        //        return Film.PosterUrl;
-        //    }
-        //    set
-        //    {
-        //        if (Film.PosterUrl != value)
-        //        {
-        //            Film.PosterUrl = value;
-        //            OnPropertyChanged(nameof(PosterUrl));
-        //        }
-        //    }
-        //}
-
-        //public int? Year
-        //{
-        //    get
-        //    {
-        //        return Film.Year;
-        //    }
-        //    set
-        //    {
-        //        if (Film.Year != value)
-        //        {
-        //            Film.Year = value;
-        //            OnPropertyChanged(nameof(Year));
-        //        }
-        //    }
-        //}
-
-        //public float? GlobalRating
-        //{
-        //    get
-        //    {
-        //        return Film.GlobalRating;
-        //    }
-        //    set
-        //    {
-        //        if (Film.GlobalRating != value)
-        //        {
-        //            Film.GlobalRating = value;
-        //            OnPropertyChanged(nameof(GlobalRating));
-        //        }
-        //    }
-        //}
-
-        //public int SelfRating
-        //{
-        //    get
-        //    {
-        //        return Film.SelfRating;
-        //    }
-        //    set
-        //    {
-        //        if (Film.SelfRating != value)
-        //        {
-        //            Film.SelfRating = value;
-        //            OnPropertyChanged(nameof(SelfRating));
-        //        }
-        //    }
-        //}
-
-        //public ObservableCollection<Genre> Genres
-        //{
-        //    get
-        //    {
-        //        return Film.Genres;
-        //    }
-        //}
+        public ObservableCollection<GenreVm> Genres
+        {
+            get
+            {
+                return Film.Genres;
+            }
+        }
 
         public List<GenreVm> AllGenres
         {
@@ -194,7 +70,7 @@ namespace FilmManager.ViewModels
             set
             {
                 _allGenres = value;
-                //GenresForChange = new ListCollectionView(value.Except(Genres).ToList());
+                GenresForChange = new ListCollectionView(value);
                 OnPropertyChanged(nameof(AllGenres));
             }
         }
@@ -210,50 +86,10 @@ namespace FilmManager.ViewModels
             {
                 _genresForChange = value;
                 _genresForChange.IsLiveFiltering = _genresForChange.CanChangeLiveFiltering;
-                _genresForChange.Filter = (o) => !Film.Genres.Contains(o);
+                _genresForChange.Filter = (o) => !Film.Genres.Any(g => ((GenreVm)o).Source.GenreId == g.Source.GenreId);
                 OnPropertyChanged(nameof(GenresForChange));
             }
         }
-
-        //public string SearchString
-        //{
-        //    get
-        //    {
-        //        return _searchComparer.SearchString;
-        //    }
-        //    set
-        //    {
-        //        if (_searchComparer.SearchString != value)
-        //        {
-        //            _searchComparer.SearchString = value;
-        //            OnPropertyChanged(nameof(SearchString));
-        //            OnPropertyChanged(nameof(IsPopupVisible));
-        //            //OnPropertyChanged(nameof(GenresForChange));
-        //        }
-        //    }
-        //}
-
-        //public bool IsPopupVisible
-        //{
-        //    get
-        //    {
-        //        return GenreTextBoxFocused && SearchString.Length > 0;
-        //    }
-        //}
-
-        //public bool GenreTextBoxFocused
-        //{
-        //    get
-        //    {
-        //        return _genreTextBoxFocused;
-        //    }
-
-        //    set
-        //    {
-        //        _genreTextBoxFocused = value;
-        //        OnPropertyChanged(nameof(IsPopupVisible));
-        //    }
-        //}
 
         public string GenreText
         {
@@ -275,24 +111,4 @@ namespace FilmManager.ViewModels
             }
         }
     }
-
-    //class SearchComparer : IComparer<string>
-    //{
-    //    public string SearchString { get; set; }
-
-    //    public int Compare(string x, string y)
-    //    {
-    //        var xIndex = x.IndexOf(SearchString, StringComparison.CurrentCultureIgnoreCase);
-    //        var yIndex = y.IndexOf(SearchString, StringComparison.CurrentCultureIgnoreCase);
-
-    //        if (xIndex < 0 && yIndex < 0)
-    //            return 0;
-    //        if (xIndex < 0)
-    //            return xIndex;
-    //        if (yIndex < 0)
-    //            return -yIndex;
-    //        return x.IndexOf(SearchString, StringComparison.CurrentCultureIgnoreCase)
-    //            .CompareTo(y.IndexOf(SearchString, StringComparison.CurrentCultureIgnoreCase));
-    //    }
-    //}
 }

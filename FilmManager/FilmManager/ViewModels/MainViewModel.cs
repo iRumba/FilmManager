@@ -15,7 +15,7 @@ namespace FilmManager.ViewModels
     {
         FilmManagerApplication _source;
 
-        Film _selectedFilm;
+        FilmVm _selectedFilm;
 
         ImageVm _imageSource;
 
@@ -103,7 +103,7 @@ namespace FilmManager.ViewModels
         {
             get
             {
-                return _source.Films.Select(f=>new FilmVm(f)).ToList();
+                return _source.Films.Select(f=>new FilmVm(f) { AutosaveSelfRating = true }).ToList();
             }
         }
 
@@ -175,7 +175,7 @@ namespace FilmManager.ViewModels
             }
         }
 
-        public Film SelectedFilm
+        public FilmVm SelectedFilm
         {
             get
             {
@@ -230,7 +230,7 @@ namespace FilmManager.ViewModels
             OnPropertyChanged(nameof(Films));
             OnPropertyChanged(nameof(TotalPages));
             OnPropertyChanged(nameof(CurrentPage));
-            Filters.Genres.SetData(_source.UsedGenres);
+            Filters.Genres.SetData(_source.UsedGenres.Select(g => new GenreVm(g)).ToList());
             Filters.Years.SetData(_source.Years);
         }
 
@@ -243,34 +243,41 @@ namespace FilmManager.ViewModels
             SearchText = string.Empty;
         }
 
-        internal async Task EditFilmAsync(Film editFilm = null)
+        internal async Task EditFilmAsync(FilmVm editedFilm = null)
         {
-            var editedFilm = editFilm ?? SelectedFilm;
-            
+            //var editedFilm = editFilm; //?? SelectedFilm;
+            var filmEditWnd = new Wnd_FilmEditing();
+            FilmVm filmVm = null;
             if (editedFilm != null)
             {
-                //var film = editedFilm.CreateCopy();
-                
-                var filmEditWnd = new Wnd_FilmEditing();
-                filmEditWnd.Source.Film = film;
-                filmEditWnd.Source.AllGenres = _source.AllGenres;
-                if (filmEditWnd.ShowDialog() == true)
-                {
-                    editedFilm.FillFrom(filmEditWnd.Source.Film);
-                    await _source.AddOrUpdateFilmsAsync(editedFilm);
-                }
+                filmVm = new FilmVm(editedFilm.Source);
+                //filmVm.FillFromModel();
+            }
+            else
+            {
+                filmVm = new FilmVm();
+            }
+
+            filmEditWnd.Source.Film = filmVm;
+            filmEditWnd.Source.AllGenres = _source.AllGenres.Select(g => new GenreVm(g)).ToList();
+            if (filmEditWnd.ShowDialog() == true)
+            {
+                filmVm.FillModel();
+                //editedFilm.FillModel();
+                if (editedFilm == null)
+                    await _source.AddOrUpdateFilmsAsync(filmVm.Source);
             }
         }
 
-        public async Task AddFilmAsync()
-        {
-            var filmEditWnd = new Wnd_FilmEditing();
-            filmEditWnd.Source.AllGenres = _source.AllGenres;
-            if (filmEditWnd.ShowDialog() == true)
-            {
-                await _source.AddOrUpdateFilmsAsync(filmEditWnd.Source.Film);
-            }
-        }
+        //public async Task AddFilmAsync()
+        //{
+        //    var filmEditWnd = new Wnd_FilmEditing();
+        //    filmEditWnd.Source.AllGenres = _source.AllGenres.Select(g => new GenreVm(g)).ToList();
+        //    if (filmEditWnd.ShowDialog() == true)
+        //    {
+        //        await _source.AddOrUpdateFilmsAsync(filmEditWnd.Source.Film);
+        //    }
+        //}
 
         public async Task RemoveFilmAsync(Film film)
         {

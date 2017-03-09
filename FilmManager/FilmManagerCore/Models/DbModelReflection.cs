@@ -13,12 +13,12 @@ namespace FilmManagerCore.Models
         protected DbModelReflection(TDbModel source)
         {
             _source = source;
-            //Init();
+            FillFromModel();
         }
 
         protected internal abstract void FillFromModel();
 
-        internal abstract void FillModel();
+        internal abstract TDbModel FillModel();
 
         public TDbModel Source
         {

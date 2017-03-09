@@ -13,14 +13,14 @@ namespace FilmManager.ViewModels
         protected ModelReflection(TModel source)
         {
             _source = source;
-            //Init();
+            FillFromModel();
         }
 
         protected internal abstract void FillFromModel();
 
-        protected internal abstract void FillModel();
+        protected internal abstract TModel FillModel();
 
-        protected TModel Source
+        internal TModel Source
         {
             get
             {

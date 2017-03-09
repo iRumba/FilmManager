@@ -11,27 +11,58 @@ namespace FilmManagerCore.Models
 {
     public class Genre : DbModelReflection<DbModels.Genre>
     {
-        public long GenreId { get; set; }
-        public string Name { get; set; }
-        //public List<Film> Films { get; set; }
+        long _genreId;
+        string _name;
+
+        public long GenreId
+        {
+            get
+            {
+                return _genreId;
+            }
+
+            set
+            {
+                if (_genreId != value)
+                {
+                    _genreId = value;
+                    OnChanged();
+                }
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnChanged();
+                }
+            }
+        }
 
         public Genre(DbModels.Genre source) : base(source) { }
         public Genre() : base(new DbModels.Genre()) { }
 
-        internal override void FillFromModel()
+        protected internal override void FillFromModel()
         {
-            //Films = new List<Film>();
+            BeginEdit();
             GenreId = _source.GenreId;
             Name = _source.Name;
-            //Films = _source.Films?.Select(f => new Film(f)).ToList();
-            //Films.AddRange(_source.Films.Select(f => new Film(f)));
+            EndEdit();
         }
 
-        protected internal override void FillModel()
+        internal override DbModels.Genre FillModel()
         {
             _source.GenreId = GenreId;
             _source.Name = Name;
-            //_source.Films = Films?.Select(f => f.GetDbModel()).ToList();
             return _source;
         }
     }

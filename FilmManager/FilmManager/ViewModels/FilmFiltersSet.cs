@@ -25,7 +25,7 @@ namespace FilmManager.ViewModels
 
         public FilmFiltersSet()
         {
-            this[GENRES_FILTER_NAME] = new FilterDataVm<GenreVm, long?>(g => g?.FillModel()?.GenreId, g => g.Name, "Жанр");
+            this[GENRES_FILTER_NAME] = new FilterDataVm<GenreVm, long?>(g => g?.Source?.GenreId, g => g.Name, "Жанр");
             this[YEARS_FILTER_NAME] = new FilterDataVm<int, int?>(y => y, y => y.ToString(), "Год");
             this[RATINGS_FILTER_NAME] = new FilterDataVm<float, float?>(r => r, r => $"Больше {r.ToString("F0")}", "Рейтинг");
             this[SELFRATINGS_FILTER_NAME] = new FilterDataVm<int, int?>(r => r, r => $"Нравится {r}", "Нравится");
@@ -47,11 +47,11 @@ namespace FilmManager.ViewModels
                 SelfRatingChanged?.Invoke(this, new SelfRatingChangedEventArgs(e));
         }
 
-        public FilterDataVm<Genre, long?> Genres
+        public FilterDataVm<GenreVm, long?> Genres
         {
             get
             {
-                return (FilterDataVm<Genre, long?>)this[GENRES_FILTER_NAME];
+                return (FilterDataVm<GenreVm, long?>)this[GENRES_FILTER_NAME];
             }
         }
 

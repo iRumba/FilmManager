@@ -18,7 +18,8 @@ namespace FilmManager.ViewModels
         int _selfRating;
         float? _globalRating;
         string _foreignUrl;
-        //bool _changed;
+
+        public bool AutosaveSelfRating { get; set; }
 
         public string OriginalName
         {
@@ -118,6 +119,8 @@ namespace FilmManager.ViewModels
                 {
                     _selfRating = value;
                     OnPropertyChanged(nameof(SelfRating));
+                    if (AutosaveSelfRating)
+                        Source.SelfRating = value;                        
                 }
             }
         }
@@ -175,10 +178,13 @@ namespace FilmManager.ViewModels
         //    }
         //}
 
-        public FilmVm() : base(new Film()) { }
-        public FilmVm(Film source) : base(source) { }
+        public FilmVm() : this(new Film()) { }
+        public FilmVm(Film source) : base(source)
+        {
+            //FillFromModel();
+        }
 
-        internal override Film FillModel()
+        protected internal override Film FillModel()
         {
             _source.BeginEdit();
             _source.OriginalName = OriginalName;
@@ -189,25 +195,17 @@ namespace FilmManager.ViewModels
             _source.Description = Description;
             _source.ForeignUrl = ForeignUrl;
             _source.PosterUrl = PosterUrl;
-            _source.Genres = Genres?.Select(g => g.FillModel()).ToList();
+            _source.Genres.Clear();
+            foreach(var genre in Genres)
+            {
+                genre.FillModel();
+                _source.Genres.Add(genre.Source);
+            }
             _source.EndEdit();
             return _source;
         }
 
         protected internal override void FillFromModel()
-        {
-            _source.Changed += _source_Changed;
-            Fill();
-        }
-
-        void _source_Changed(object sender, EventArgs e)
-        {
-            _source.Changed -= _source_Changed;
-            Fill();
-            _source.Changed += _source_Changed;
-        }
-
-        void Fill()
         {
             OriginalName = _source.OriginalName;
             LocalName = _source.LocalName;
@@ -225,6 +223,35 @@ namespace FilmManager.ViewModels
                 Genres = new ObservableCollection<GenreVm>();
 
             OnPropertyChanged(nameof(Genres));
+            //_source.Changed += _source_Changed;
+            //Fill();
         }
+
+        //void _source_Changed(object sender, EventArgs e)
+        //{
+        //    _source.Changed -= _source_Changed;
+        //    Fill();
+        //    _source.Changed += _source_Changed;
+        //}
+
+        //void Fill()
+        //{
+        //    OriginalName = _source.OriginalName;
+        //    LocalName = _source.LocalName;
+        //    Year = _source.Year;
+        //    SelfRating = _source.SelfRating;
+        //    GlobalRating = _source.GlobalRating;
+        //    Description = _source.Description;
+        //    ForeignUrl = _source.ForeignUrl;
+        //    PosterUrl = _source.PosterUrl;
+
+        //    var genres = _source.Genres?.Select(g => new GenreVm(g));
+        //    if (genres != null)
+        //        Genres = new ObservableCollection<GenreVm>(genres);
+        //    else
+        //        Genres = new ObservableCollection<GenreVm>();
+
+        //    OnPropertyChanged(nameof(Genres));
+        //}
     }
 }

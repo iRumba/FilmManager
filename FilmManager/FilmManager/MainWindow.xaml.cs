@@ -73,18 +73,18 @@ namespace FilmManager
 
         async void RemoveFilm_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            var film = e.Parameter as Film;
+            var film = e.Parameter as FilmVm;
             if (film != null)
             {
-                await Source.RemoveFilmAsync(film);
+                await Source.RemoveFilmAsync(film.Source);
                 await Source.RefreshAsync();
             }
         }
 
         void RemoveFilm_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            Film param = null;
-            e.CanExecute = (param = e.Parameter as Film) != null && param.FilmId != default(long);
+            FilmVm param = null;
+            e.CanExecute = (param = e.Parameter as FilmVm) != null;
             //if (!e.CanExecute)
             //    Console.WriteLine(false);
         }
@@ -114,7 +114,7 @@ namespace FilmManager
 
         async void NewFilm_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            await Source.AddFilmAsync();
+            await Source.EditFilmAsync();
             await Source.RefreshAsync();
         }
 
@@ -125,13 +125,13 @@ namespace FilmManager
 
         async void EditFilm_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            await Source.EditFilmAsync(e.Parameter as Film);
+            await Source.EditFilmAsync(e.Parameter as FilmVm);
             await Source.RefreshAsync();
         }
 
         void EditFilm_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            var film = e.Parameter as Film;
+            var film = e.Parameter as FilmVm;
             e.CanExecute = film != null;
         }
 

@@ -218,7 +218,7 @@ namespace FilmManagerCore.Models
         //    OnPropertyChanged(string.Empty);
         //}
 
-        internal override void FillModel()
+        internal override DbModels.Film FillModel()
         {
             _source.FilmId = FilmId;
             _source.AddingDate = AddingDate;
@@ -231,6 +231,7 @@ namespace FilmManagerCore.Models
             _source.SelfRating = SelfRating;
             _source.Year = Year;
             _source.Genres = Genres?.Select(g => g.Source).ToList();
+            return _source;
         }
 
         protected internal override void FillFromModel()

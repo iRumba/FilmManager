@@ -63,6 +63,7 @@ namespace FilmManagerCore.Models
         {
             _source.GenreId = GenreId;
             _source.Name = Name;
+            _source.Films = new List<DbModels.Film>();
             return _source;
         }
     }

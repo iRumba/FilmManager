@@ -230,7 +230,7 @@ namespace FilmManagerCore.Models
             _source.PosterUrl = PosterUrl;
             _source.SelfRating = SelfRating;
             _source.Year = Year;
-            _source.Genres = Genres?.Select(g => g.Source).ToList();
+            _source.Genres = Genres?.Select(g => g.FillModel()).ToList() ?? new List<DbModels.Genre>();
             return _source;
         }
 

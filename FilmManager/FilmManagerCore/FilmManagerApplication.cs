@@ -89,14 +89,14 @@ namespace FilmManagerCore
                     query.AddFilter(f => f.GlobalRating >= Filters.Rating.Value);
                 if (Filters.SelfRating.HasValue)
                     query.AddFilter(f => f.SelfRating == Filters.SelfRating.Value);
-                if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
-                    query.AddFilter(f => f.LocalName.Contains(Filters.TextFilter) ||
-                    f.OriginalName.Contains(Filters.TextFilter) ||
-                    f.Description.Contains(Filters.TextFilter));
                 //if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
-                //    query.AddFilter(f => f.LocalName.ToUpper().Contains(str) ||
-                //    f.OriginalName.ToUpper().Contains(str) ||
-                //    f.Description.ToUpper().Contains(str));
+                //    query.AddFilter(f => f.LocalName.Contains(Filters.TextFilter) ||
+                //    f.OriginalName.Contains(Filters.TextFilter) ||
+                //    f.Description.Contains(Filters.TextFilter));
+                if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
+                    query.AddFilter(f => f.LocalName.ToUpper().Contains(Filters.TextFilter.ToUpper()) ||
+                    f.OriginalName.ToUpper().Contains(Filters.TextFilter.ToUpper()) ||
+                    f.Description.ToUpper().Contains(Filters.TextFilter.ToUpper()));
                 //if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
                 //    query.AddFilter(f => f.LocalName.IndexOf(str,StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                 //    f.OriginalName.ToUpper().Contains(str) ||

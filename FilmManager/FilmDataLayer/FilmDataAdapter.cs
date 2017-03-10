@@ -7,6 +7,7 @@ using FilmDataLayer.Contexts;
 using FilmDataLayer.Models;
 using System.Data.Entity.Migrations;
 using System.Data.Entity;
+using RefactorThis.GraphDiff;
 
 namespace FilmDataLayer
 {
@@ -73,6 +74,22 @@ namespace FilmDataLayer
                 //}
                 //context.ChangeTracker.DetectChanges();
                 context.SaveChanges();
+            }
+        }
+
+        public Film CreateNewFilm()
+        {
+            using (var context = CreateFilmContext())
+            {
+                return context.Films.Create();
+            }
+        }
+
+        public Genre CreateNewGenre()
+        {
+            using (var context = CreateFilmContext())
+            {
+                return context.Genres.Create();
             }
         }
 
@@ -143,37 +160,42 @@ namespace FilmDataLayer
             {
                 //context.Configuration.AutoDetectChangesEnabled = false;
                 //var genres = new List<Genre>();
-
                 foreach (var film in films)
                 {
-                    //var findedFilm = context.Films.Find(film.FilmId);
-                    //findedFilm.Genres.AddRange(film.Genres);
-                    var genres = new List<Genre>();
-                    genres.AddRange(film.Genres);
-                    film.Genres.Clear();
-                    film.Genres.AddRange(genres.Select(g => g.GenreId > 0 ? context.Genres.Find(g.GenreId) : context.Genres.Add(g)));
+                    context.UpdateGraph(film, map => map.OwnedCollection(f => f.Genres));
+                    //IEnumerable<Genre> deletedGenres = null;
+                    //var findedFilm = film.FilmId != default(long) ? context.Films.Include(f => f.Genres).AsNoTracking().SingleOrDefault(f => f.FilmId == film.FilmId) : null;
+                    //if (findedFilm != null)
+                    //{
+                    //    context.Entry(film).State = EntityState.Modified;
+
+                    //    deletedGenres = findedFilm.Genres.Except(film.Genres,
+                    //        new UniversalEqualityComparer<Genre>((g1, g2) => g1.GenreId == g2.GenreId, g => g.GenreId.GetHashCode()));
+                    //    //deletedGenres.ToList().ForEach()
+                    //}
+                    //else
+                    //    context.Entry(film).State = EntityState.Added;
+
                     //foreach (var genre in film.Genres)
                     //{
-                    //    context.Genres.Attach(genre);
-                    //    //if (genre.GenreId != default(long) && context.Genres.Any(g => g.GenreId == genre.GenreId))
-                    //    //{
-                    //    //    context.Entry(genre).State = EntityState.Modified;
-                    //    //}
-                    //    //else
-                    //    //{
-                    //    //    context.Entry(genre).State = EntityState.Added;
-                    //    //}
+                    //    Genre findedGenre = null;
+                    //    findedGenre = context.Genres.SingleOrDefault(g => g.GenreId == genre.GenreId || g.Name.ToUpper() == genre.Name.ToUpper());
+                    //    //if (findedGenre !=null)
+
                     //}
-                    //Film flm = null;
-                    if (film.FilmId != default(long) && context.Films.Any(f => f.FilmId == film.FilmId))
-                    {
-                        //context.Films.AddOrUpdate(film);
-                        context.Entry(film).State = EntityState.Modified;
-                    }
-                    else
-                    {
-                        context.Entry(film).State = EntityState.Added;
-                    }
+                    ////context.Films.Attach(film);
+                    ////var findedFilm = context.Films.Find(film.FilmId);
+                    ////findedFilm.Genres.AddRange(film.Genres);
+                    //var genres = new List<Genre>();
+                    //genres.AddRange(film.Genres);
+                    //while (film.Genres.Count > 0)
+                    //    film.Genres.RemoveAt(0);
+                    ////film.Genres.Clear();
+                    //film.Genres.AddRange(genres.
+                    //    Select(g => g.GenreId > 0 ?
+                    //        context.Genres.
+                    //            Single(g2 => g2.Name.ToUpper() == g.Name.ToUpper()) :
+                    //    context.Genres.Add(g)));
                 }
             }
             finally

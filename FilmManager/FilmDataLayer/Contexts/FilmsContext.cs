@@ -18,6 +18,9 @@ namespace FilmDataLayer.Contexts
 
         public FilmsContext(string connectionString) : base(new SQLiteConnection(connectionString), true)
         {
+            SQLiteFunction.RegisterFunction(typeof(SqliteCharindexFunction));
+            SQLiteFunction.RegisterFunction(typeof(SqliteLowerFunction));
+            SQLiteFunction.RegisterFunction(typeof(SqliteUpperFunction));
             Database.SetInitializer<FilmsContext>(null);
             var conf = new SqliteDbConfiguration();
         }
@@ -34,6 +37,8 @@ namespace FilmDataLayer.Contexts
                 m.MapRightKey("GenreId");
             });
             modelBuilder.Entity<Film>().Property(f => f.AddingDate).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Computed);
+
+            //modelBuilder.Entity<Film>().HasRequired(f => f.LocalName);
             //modelBuilder.Entity<Film>().Property(f => f.FilmId).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
             //modelBuilder.Entity<Genre>().Property(g => g.GenreId).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
             //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();

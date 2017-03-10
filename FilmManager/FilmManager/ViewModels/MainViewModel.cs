@@ -236,10 +236,10 @@ namespace FilmManager.ViewModels
 
         internal void ClearFilters()
         {
-            Filters.Genres.SelectedValue = null;
-            Filters.Years.SelectedValue = null;
-            Filters.SelfRatings.SelectedValue = null;
-            Filters.Ratings.SelectedValue = null;
+            Filters.Genres.Reset();//.SelectedValue = null;
+            Filters.Years.Reset();//.SelectedValue = null;
+            Filters.SelfRatings.Reset();//.SelectedValue = null;
+            Filters.Ratings.Reset();//.SelectedValue = null;
             SearchText = string.Empty;
         }
 

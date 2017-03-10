@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -10,7 +11,9 @@ namespace FilmDataLayer.Models
     public class Film
     {
         public long FilmId { get; set; }
+        [Required]
         public string OriginalName { get; set; }
+        [Required]
         public string LocalName { get; set; }
         public int? Year { get; set; }
         public DateTime AddingDate { get; set; }
@@ -22,7 +25,7 @@ namespace FilmDataLayer.Models
         public virtual List<Genre> Genres { get; set; }
         public Film()
         {
-            Genres = new List<Genre>();
+            //Genres = new List<Genre>();
         }
 
         public void CopyFrom(Film film)

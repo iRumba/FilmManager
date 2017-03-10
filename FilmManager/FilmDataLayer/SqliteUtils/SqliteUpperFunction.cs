@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace FilmDataLayer.SqliteUtils
 {
-    [SQLiteFunction(Name = "CYR_UPPER", Arguments = 1, FuncType = FunctionType.Scalar)]
-    class SqLiteCyrHelper : SQLiteFunction
+    [SQLiteFunction("UPPER", 1, FunctionType.Scalar)]
+    class SqliteUpperFunction : SQLiteFunction
     {
         public override object Invoke(object[] args)
         {
-            return args[0] != null ? ((string)args[0]).ToUpper() : null;
+            return args[0] != DBNull.Value ? ((string)args[0]).ToUpperInvariant() : null;
         }
     }
 }

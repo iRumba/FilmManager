@@ -195,12 +195,14 @@ namespace FilmManager.ViewModels
             _source.Description = Description;
             _source.ForeignUrl = ForeignUrl;
             _source.PosterUrl = PosterUrl;
-            _source.Genres.Clear();
-            foreach(var genre in Genres)
-            {
-                genre.FillModel();
-                _source.Genres.Add(genre.Source);
-            }
+
+            _source.Genres = Genres.Select(g => g.FillModel()).ToList();
+            //_source.Genres.Clear();
+            //foreach(var genre in Genres)
+            //{
+            //    genre.FillModel();
+            //    _source.Genres.Add(genre.Source);
+            //}
             _source.EndEdit();
             return _source;
         }

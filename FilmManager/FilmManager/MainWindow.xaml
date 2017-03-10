@@ -82,8 +82,8 @@
                             <mat:Card Margin="5" Padding="10">
                                 <StackPanel Orientation="Vertical" Width="130">
                                     <TextBlock Text="{Binding FilterText}" HorizontalAlignment="Center" FontWeight="Bold"/>
-                                    <ComboBox ItemsSource="{Binding}" SelectedValue="{Binding SelectedValue}" DisplayMemberPath="Text" SelectedValuePath="Value">
-                                    </ComboBox>
+                                    <ComboBox SelectedItem="{Binding SelectedItem}" IsSynchronizedWithCurrentItem="True"
+                                        ItemsSource="{Binding}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="ComboBox_SelectionChanged"/>
                                 </StackPanel>
                             </mat:Card>
 

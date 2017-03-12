@@ -230,9 +230,28 @@ namespace FilmManagerCore.Models
             _source.PosterUrl = PosterUrl;
             _source.SelfRating = SelfRating;
             _source.Year = Year;
-            _source.Genres = Genres?.Select(g => g.FillModel()).ToList() ?? new List<DbModels.Genre>();
+            //if (_source.Genres != null)
+            //{
+            //    var existed = _source.Genres.ToList();
+            //    foreach(var genre in existed)
+            //    {
+            //        var finded = Genres.FirstOrDefault(g => g.GenreId == genre.GenreId || g.Name.Equals(genre.Name, StringComparison.CurrentCultureIgnoreCase));
+            //        if (finded == null)
+            //            _source.Genres.Remove(genre);
+            //    }
+            //    foreach(var genre in Genres)
+            //    {
+            //        var finded = _source.Genres.FirstOrDefault(g => g.GenreId == genre.GenreId || g.Name.Equals(genre.Name, StringComparison.CurrentCultureIgnoreCase));
+            //        if (finded == null)
+            //            _source.Genres.Add(genre.FillModel());
+            //    }
+            //}
+            //else
+                _source.Genres = Genres?.Select(g => g.FillModel()).ToList() ?? new List<DbModels.Genre>();
             return _source;
         }
+
+
 
         protected internal override void FillFromModel()
         {

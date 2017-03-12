@@ -179,10 +179,5 @@ namespace FilmManager
         {
             e.CanExecute = true;
         }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Console.WriteLine("changed");
-        }
     }
 }

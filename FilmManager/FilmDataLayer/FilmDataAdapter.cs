@@ -158,11 +158,90 @@ namespace FilmDataLayer
         {
             try
             {
+                
+
                 //context.Configuration.AutoDetectChangesEnabled = false;
                 //var genres = new List<Genre>();
                 foreach (var film in films)
                 {
-                    context.UpdateGraph(film, map => map.OwnedCollection(f => f.Genres));
+                    var newGenres = new List<Genre>();
+                    newGenres.AddRange(film.Genres);
+                    film.Genres.Clear();
+                    context.Films.Attach(film);
+                    //context.Films.AddOrUpdate(film);
+                    if (film.FilmId != default(long) && context.Films.Any(f => f.FilmId == film.FilmId))
+                    {
+                        context.Entry(film).Collection(f => f.Genres).Load();
+                        context.Entry(film).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        context.Entry(film).State = EntityState.Added;
+                    }
+                        
+                    foreach(var genre in newGenres)
+                    {
+                        if (!film.Genres.Any(g => g.GenreId == genre.GenreId || g.Name.Equals(genre.Name, StringComparison.CurrentCultureIgnoreCase)))
+                        {
+                            context.Genres.Attach(genre);
+                            film.Genres.Add(genre);
+                            if (!context.Genres.Any(g => g.Name.ToUpper() == genre.Name.ToUpper()))
+                                context.Entry(genre).State = EntityState.Added;
+                        }
+                    }
+
+                    var counter = 0;
+
+                    while (counter < film.Genres.Count)
+                    {
+                        var genre = film.Genres[counter];
+                        if (!newGenres.Any(g => g.GenreId == genre.GenreId || g.Name.Equals(genre.Name, StringComparison.CurrentCultureIgnoreCase)))
+                            film.Genres.Remove(genre);
+                        else
+                            counter++;
+                    }
+                        //var existedGenres = new List<Genre>();
+                        //Film existedFilm = null;
+                        ////context.Configuration.ProxyCreationEnabled = false;
+                        //if (film.FilmId != default(long) && (existedFilm = context.Films.AsNoTracking().Include(f => f.Genres).FirstOrDefault(f => f.FilmId == film.FilmId)) != null)
+                        //{
+                        //    //context.Entry(existedFilm).State = EntityState.Detached;
+                        //    context.Entry(film).State = EntityState.Modified;
+                        //    if (existedFilm.Genres != null)
+                        //        existedGenres.AddRange(existedFilm.Genres);
+                        //}
+                        //else
+                        //    context.Entry(film).State = EntityState.Added;
+
+                        //context.Configuration.ProxyCreationEnabled = true;
+
+                    //    for (var i = 0; i < film.Genres.Count; i++)
+                    //{
+                    //    var genre = film.Genres[i];
+                    //    var findedGenre = context.Genres.FirstOrDefault(g => g.GenreId == genre.GenreId || g.Name.ToUpper() == genre.Name.ToUpper());
+                    //    if (findedGenre != null)
+                    //    {
+                    //        film.Genres[i] = findedGenre;
+                    //        context.Entry(findedGenre).State = EntityState.Modified;
+                    //    }
+                    //    else
+                    //    {
+                    //        context.Entry(genre).State = EntityState.Added;
+                    //    }
+                    //}
+
+                    //context.Entry(film).Collection(f => f.Genres).Load();
+
+                    //foreach(var genre in existedGenres)
+                    //{
+                    //    if (!film.Genres.Any(g=> g.GenreId == genre.GenreId))
+                    //    {
+                    //        film.Genres.Add(genre);
+                    //        context.Genres.Attach(genre);
+                    //        context.Entry(genre).State = EntityState.Deleted;
+                    //    }
+                    //}
+                    //context.UpdateGraph(film, map => map.OwnedCollection(f => f.Genres));
                     //IEnumerable<Genre> deletedGenres = null;
                     //var findedFilm = film.FilmId != default(long) ? context.Films.Include(f => f.Genres).AsNoTracking().SingleOrDefault(f => f.FilmId == film.FilmId) : null;
                     //if (findedFilm != null)
@@ -197,6 +276,10 @@ namespace FilmDataLayer
                     //            Single(g2 => g2.Name.ToUpper() == g.Name.ToUpper()) :
                     //    context.Genres.Add(g)));
                 }
+            }
+            catch
+            {
+                throw;
             }
             finally
             {

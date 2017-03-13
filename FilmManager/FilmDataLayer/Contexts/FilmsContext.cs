@@ -21,8 +21,9 @@ namespace FilmDataLayer.Contexts
 
         public FilmsContext(string connectionString) : base(new SQLiteConnection(connectionString), true)
         {
+            // Проверка на существование базы. По структуре проверять не стал, думаю, это лишнее
             var cb = new SQLiteConnectionStringBuilder(Database.Connection.ConnectionString);
-            if (!File.Exists(cb.DataSource))
+            if (!File.Exists(cb.DataSource) || File.OpenRead(cb.DataSource).Length == 0)
             {
                 File.WriteAllBytes(cb.DataSource, Properties.Resources.DB_films_default);
             }
@@ -37,8 +38,6 @@ namespace FilmDataLayer.Contexts
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //SQLiteFunction.RegisterFunction(typeof(SQLiteCaseInsensitiveCollation));
-            //SQLiteFunction.RegisterFunction(typeof(SqLiteCyrHelper));
             modelBuilder.Entity<Film>().HasMany(g => g.Genres).WithMany(f => f.Films).Map(m =>
             {
                 m.ToTable("FilmGenres");
@@ -46,12 +45,6 @@ namespace FilmDataLayer.Contexts
                 m.MapRightKey("GenreId");
             });
             modelBuilder.Entity<Film>().Property(f => f.AddingDate).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Computed);
-
-            //modelBuilder.Entity<Film>().HasRequired(f => f.LocalName);
-            //modelBuilder.Entity<Film>().Property(f => f.FilmId).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
-            //modelBuilder.Entity<Genre>().Property(g => g.GenreId).HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
-            //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
-            //modelBuilder.Entity<Genre>().Property(g => g.Name).(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
         }
     }
 }

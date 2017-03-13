@@ -89,7 +89,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <Resource Include="Resources\DB_films_default.db3" />
+    <EmbeddedResource Include="Resources\DB_films_default.db3" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

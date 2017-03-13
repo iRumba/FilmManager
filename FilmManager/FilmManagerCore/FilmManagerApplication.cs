@@ -109,7 +109,7 @@ namespace FilmManagerCore
                 TotalCount = query.TotalCount;
                 //CurrentPage = query.CurrentPage.Value;
 
-                List<FilmDataLayer.Models.Film> res = null;
+                List<Infrastructure.Models.Film> res = null;
                 if (ItemsPerPage > 0 && CurrentPage > 0)
                 {
                     if (!query.IsOrdered)

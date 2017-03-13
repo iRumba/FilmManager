@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using DbModels = FilmDataLayer.Models;
+using DbModels = Infrastructure.Models;
 
 namespace FilmManagerCore.Models
 {

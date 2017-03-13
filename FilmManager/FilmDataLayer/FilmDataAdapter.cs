@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FilmDataLayer.Contexts;
-using FilmDataLayer.Models;
+using Infrastructure.Models;
 using System.Data.Entity.Migrations;
 using System.Data.Entity;
 using RefactorThis.GraphDiff;

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using FilmDataLayer.Models;
+using Infrastructure.Models;
 using FilmDataLayer.SqliteUtils;
 
 namespace FilmDataLayer.Contexts
@@ -23,7 +23,7 @@ namespace FilmDataLayer.Contexts
         {
             // Проверка на существование базы. По структуре проверять не стал, думаю, это лишнее
             var cb = new SQLiteConnectionStringBuilder(Database.Connection.ConnectionString);
-            if (!File.Exists(cb.DataSource) || File.OpenRead(cb.DataSource).Length == 0)
+            if (!File.Exists(cb.DataSource) || new FileInfo(cb.DataSource).Length == 0)
             {
                 File.WriteAllBytes(cb.DataSource, Properties.Resources.DB_films_default);
             }

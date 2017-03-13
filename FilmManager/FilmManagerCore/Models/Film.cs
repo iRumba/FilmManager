@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using FilmDataLayer.Models;
-using DbModels = FilmDataLayer.Models;
+using DbModels = Infrastructure.Models;
 
 namespace FilmManagerCore.Models
 {
@@ -193,31 +193,6 @@ namespace FilmManagerCore.Models
 
         public Film() : base(new DbModels.Film()) { }
 
-        //public Film CreateCopy()
-        //{
-        //    var res = new Film();
-        //    res.FillFrom(this);
-        //    return res;
-        //}
-
-        //public void FillFrom(Film film)
-        //{
-        //    _addingDate = film._addingDate;
-        //    _description = film._description;
-        //    _filmId = film._filmId;
-        //    _foreignUrl = film._foreignUrl;
-        //    _globalRating = film._globalRating;
-        //    _localName = film._localName;
-        //    _originalName = film._originalName;
-        //    _posterUrl = film._posterUrl;
-        //    _selfRating = film._selfRating;
-        //    _year = film._year;
-        //    Genres.Clear();
-        //    foreach (var genre in film.Genres)
-        //        Genres.Add(genre);
-        //    OnPropertyChanged(string.Empty);
-        //}
-
         internal override DbModels.Film FillModel()
         {
             _source.FilmId = FilmId;
@@ -230,24 +205,7 @@ namespace FilmManagerCore.Models
             _source.PosterUrl = PosterUrl;
             _source.SelfRating = SelfRating;
             _source.Year = Year;
-            //if (_source.Genres != null)
-            //{
-            //    var existed = _source.Genres.ToList();
-            //    foreach(var genre in existed)
-            //    {
-            //        var finded = Genres.FirstOrDefault(g => g.GenreId == genre.GenreId || g.Name.Equals(genre.Name, StringComparison.CurrentCultureIgnoreCase));
-            //        if (finded == null)
-            //            _source.Genres.Remove(genre);
-            //    }
-            //    foreach(var genre in Genres)
-            //    {
-            //        var finded = _source.Genres.FirstOrDefault(g => g.GenreId == genre.GenreId || g.Name.Equals(genre.Name, StringComparison.CurrentCultureIgnoreCase));
-            //        if (finded == null)
-            //            _source.Genres.Add(genre.FillModel());
-            //    }
-            //}
-            //else
-                _source.Genres = Genres?.Select(g => g.FillModel()).ToList() ?? new List<DbModels.Genre>();
+            _source.Genres = Genres?.Select(g => g.FillModel()).ToList() ?? new List<DbModels.Genre>();
             return _source;
         }
 

@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmDataLayer", "FilmDataLa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmManagerCore", "FilmManagerCore\FilmManagerCore.csproj", "{498F0AA3-2163-4BAC-971B-8DA32C847F7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmParser", "FilmParser\FilmParser.csproj", "{3F0719EA-BBD4-4002-BDCA-5B5541C575CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{1FAE3CAB-177F-478A-A294-E46FB819CDBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{498F0AA3-2163-4BAC-971B-8DA32C847F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{498F0AA3-2163-4BAC-971B-8DA32C847F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{498F0AA3-2163-4BAC-971B-8DA32C847F7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F0719EA-BBD4-4002-BDCA-5B5541C575CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F0719EA-BBD4-4002-BDCA-5B5541C575CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F0719EA-BBD4-4002-BDCA-5B5541C575CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F0719EA-BBD4-4002-BDCA-5B5541C575CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FAE3CAB-177F-478A-A294-E46FB819CDBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FAE3CAB-177F-478A-A294-E46FB819CDBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FAE3CAB-177F-478A-A294-E46FB819CDBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FAE3CAB-177F-478A-A294-E46FB819CDBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

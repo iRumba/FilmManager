@@ -12,11 +12,8 @@ namespace FilmDataLayer
     public class QuerySelectBuilder<T> : IDisposable where T:class
     {
         IQueryable<T> _currentQuery;
-        //int? _itemsPerPage;
-        //int? _pageNumber;
 
         int? _totalCountCache;
-        //int? _totalPagesCache;
 
         internal event EventHandler Disposing;
 
@@ -100,7 +97,6 @@ namespace FilmDataLayer
         void ClearCache()
         {
             _totalCountCache = null;
-            //_totalPagesCache = null;
         }
     }
 }

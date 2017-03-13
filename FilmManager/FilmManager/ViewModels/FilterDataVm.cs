@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +11,7 @@ using FilmManagerCore;
 
 namespace FilmManager.ViewModels
 {
-    public class FilterDataVm<TSource, TValue> : FilterDataVm, IEnumerable<FilterItemVm<TValue>>, INotifyCollectionChanged
+    public class FilterDataVm<TSource, TValue> : FilterDataVm, INotifyCollectionChanged
     {
         public FilterDataVm(Func<TSource, TValue> valueSelector, Func<TSource, string> textSelector,
             string filterText, string nonSelectedText, TValue nonSelectedValue, IEqualityComparer<TValue> comparer) 
@@ -46,16 +48,6 @@ string filterText, IEqualityComparer<TValue> comparer) :
 this(valueSelector, textSelector, filterText, null, default(TValue), comparer)
         { }
 
-        public new IEnumerator<FilterItemVm<TValue>> GetEnumerator()
-        {
-            return (_items as IEnumerable<FilterItemVm<TValue>>)?.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _items.GetEnumerator();
-        }
-
         public void SetData(IEnumerable<TSource> source)
         {
             SetData(source.Select(s=>(object)s));
@@ -65,14 +57,10 @@ this(valueSelector, textSelector, filterText, null, default(TValue), comparer)
     public abstract class FilterDataVm : Notifier, IEnumerable<FilterItemVm>, INotifyCollectionChanged
     {
         string _filterText;
-        object _selectedValue;
         FilterItemVm _selectedItem;
-        bool _notRaiseValueChanged;
-        Func<object, string> _textSelector;
-        Func<object, object> _valueSelector;
-        Func<object, object, bool> _equalityComparer;
-
-        protected IEnumerable<FilterItemVm> _items;
+        //bool _notRaiseValueChanged;
+        ObservableCollection<FilterItemVm> _items;
+        bool _isStrict;
 
         public event EventHandler<SelectedValueChangedEventArgs> SelectedValueChanged;
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -81,6 +69,9 @@ this(valueSelector, textSelector, filterText, null, default(TValue), comparer)
             Func<object,object> valueSelector, Func<object, string> textSelector, Func<object, object, bool> equalityComparer,
             string filterText)
         {
+            _items = new ObservableCollection<FilterItemVm>();
+            Items = new ReadOnlyObservableCollection<FilterItemVm>(_items);
+
             if (valueSelector == null || textSelector == null || equalityComparer == null)
                 throw new InvalidOperationException("FilterDataVm: valueSelector or textSelector or equalityComparer is null");
 
@@ -92,7 +83,11 @@ this(valueSelector, textSelector, filterText, null, default(TValue), comparer)
             TextSelector = textSelector;
             EqualityComparer = equalityComparer;
             FilterText = filterText;
-            SetData(null);
+
+            OnStrictChanged();
+            Reset();
+            //SelectedItem = _items[0];
+            //SetData(null);
         }
 
         protected Func<object, string> TextSelector { get; }
@@ -101,23 +96,60 @@ this(valueSelector, textSelector, filterText, null, default(TValue), comparer)
 
         protected Func<object, object, bool> EqualityComparer { get; }
 
+        public ReadOnlyObservableCollection<FilterItemVm> Items { get; }
+
         protected void SetData(IEnumerable<object> data)
         {
-            if (data == null)
-                data = new object[0];
-            var d = data.ToArray();
-            var list = new List<FilterItemVm>();
-            if (!IsStrict || d.Length == 0)
-                list.Add(new FilterItemVm { Text = NonSelectedText, Value = NonSelectedValue });
-            list.AddRange(d.Where(v => ValueSelector(v) != NonSelectedValue).
-                Select(o => new FilterItemVm { Text = TextSelector(o), Value = ValueSelector(o) }));
-            _items = list;
-            _notRaiseValueChanged = true;
-            var lastValue = SelectedItem == null ? NonSelectedValue : SelectedItem.Value;
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            ResetTo(lastValue);
-            //SelectedItem = _items.First(i => EqualityComparer(i.Value, lastValue));
-            _notRaiseValueChanged = false;
+            try
+            {
+                if (data == null)
+                    data = new object[0];
+                var d = data.ToArray();
+
+                var startInd = 0;
+                if (!IsStrict)
+                    startInd = 1;
+
+                // Перебираем переданную коллекцию
+                for (var i = 0; i < d.Length; i++)
+                {
+                    var text = TextSelector(d[i]);
+                    var value = ValueSelector(d[i]);
+                    var currentIndex = i + startInd;
+
+                    // Если в текущей коллекции не хватает элементов, добавляем из переданной текущий элемент
+                    if (_items.Count == currentIndex)
+                        _items.Add(new FilterItemVm { Text = text, Value = value });
+                    // Иначе, если текущие значения по порядку не совпадают...
+                    else if (!EqualityComparer(_items[currentIndex].Value, value))
+                    {
+                        // ... то пытаемся найти элемент в текущей коллекции с таким значением в другом месте
+                        var findedItem = _items.FirstOrDefault(item => EqualityComparer(item.Value, value));
+                        // Если не нашли, то вставляем новый элемент по текущему индексу
+                        if (findedItem == null)
+                            _items.Insert(currentIndex, new FilterItemVm { Text = text, Value = value });
+                        // Иначе перемещаем найденный элемент на текущий индекс
+                        else
+                            _items.Move(_items.IndexOf(findedItem), currentIndex);
+                    }
+                }
+
+                var selectedChanged = false;
+                for (var i = d.Length + startInd; i < _items.Count; i++)
+                {
+                    if (!selectedChanged || EqualityComparer(SelectedItem.Value, _items[i].Value))
+                    {
+                        SelectedItem = _items.First();
+                        selectedChanged = true;
+                    }
+
+                    _items.RemoveAt(i);
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public IEnumerator<FilterItemVm> GetEnumerator()
@@ -134,7 +166,22 @@ this(valueSelector, textSelector, filterText, null, default(TValue), comparer)
             return _items.GetEnumerator();
         }
 
-        public bool IsStrict { get; set; }
+        public bool IsStrict
+        {
+            get
+            {
+                return _isStrict;
+            }
+            set
+            {
+                if (_isStrict != value)
+                {
+                    _isStrict = value;
+                    OnPropertyChanged(nameof(IsStrict));
+                    OnStrictChanged();
+                }
+            }
+        }
 
         public string FilterText
         {
@@ -175,43 +222,38 @@ this(valueSelector, textSelector, filterText, null, default(TValue), comparer)
                     
                     _selectedItem = value;
                     OnPropertyChanged(nameof(SelectedItem));
-                    if (value != null)
-                    {
-                        OnPropertyChanged(nameof(SelectedValue));
-                        OnSelectedValueChanged(this, _selectedItem?.Value);
-                    }
-
-                    //if (value == null)
-                    //{
-                    //    _notRaiseValueChanged = true;
-                    //    Reset();
-                    //    _notRaiseValueChanged = false;
-                    //}
+                    OnPropertyChanged(nameof(SelectedValue));
+                    OnSelectedValueChanged(this, _selectedItem?.Value);
                 }
             }
         }
 
         public void Reset()
         {
-            ResetTo(NonSelectedValue);
+            SelectedItem = _items[0];
         }
 
-        public void ResetTo(object value)
+        void OnStrictChanged()
         {
-            var findedItem = _items.FirstOrDefault(i => EqualityComparer(i.Value, value));
-            if (findedItem == null)
-                if (EqualityComparer(value, NonSelectedValue))
-                    SelectedItem = _items.First();
-                else
-                    ResetTo(NonSelectedValue);
+            if (IsStrict)
+            {
+                if (EqualityComparer(_items[0].Value, NonSelectedValue))
+                {
+                    _items.RemoveAt(0);
+                }
+            }
             else
-                SelectedItem = findedItem;
+            {
+                if (_items.Count == 0 || !EqualityComparer(_items[0].Value, NonSelectedValue))
+                {
+                    _items.Insert(0, new FilterItemVm { Text = NonSelectedText, Value = NonSelectedValue });
+                }
+            }
         }
 
         void OnSelectedValueChanged(FilterDataVm source, object newValue)
         {
-            if (!_notRaiseValueChanged)
-                SelectedValueChanged?.Invoke(this, new SelectedValueChangedEventArgs(source, newValue));
+            SelectedValueChanged?.Invoke(this, new SelectedValueChangedEventArgs(source, newValue));
         }
     }
 

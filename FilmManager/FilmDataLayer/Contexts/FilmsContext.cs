@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.SQLite;
+using System.Data.SQLite.Linq;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FilmDataLayer.Models;
@@ -18,11 +21,17 @@ namespace FilmDataLayer.Contexts
 
         public FilmsContext(string connectionString) : base(new SQLiteConnection(connectionString), true)
         {
+            var cb = new SQLiteConnectionStringBuilder(Database.Connection.ConnectionString);
+            if (!File.Exists(cb.DataSource))
+            {
+                File.WriteAllBytes(cb.DataSource, Properties.Resources.DB_films_default);
+            }
             SQLiteFunction.RegisterFunction(typeof(SqliteCharindexFunction));
             SQLiteFunction.RegisterFunction(typeof(SqliteLowerFunction));
             SQLiteFunction.RegisterFunction(typeof(SqliteUpperFunction));
-            Database.SetInitializer<FilmsContext>(null);
-            var conf = new SqliteDbConfiguration();
+            //Database.SetInitializer<FilmsContext>(null);
+
+            //var conf = new SqliteDbConfiguration();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

@@ -27,7 +27,6 @@ namespace FilmManager
 
         public MainWindow()
         {
-
             InitializeComponent();
             var refreshCommand = new CommandBinding(Source.RefreshCommand);
             refreshCommand.CanExecute += RefreshCommand_CanExecute;

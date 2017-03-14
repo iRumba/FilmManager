@@ -44,6 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnvironmentVariableManager.cs" />
+    <Compile Include="FilmInfo.cs" />
+    <Compile Include="FilmListInfo.cs" />
+    <Compile Include="FilmPropertyInfo.cs" />
     <Compile Include="HtmlValueGetter.cs" />
     <Compile Include="HtmlValueGetterInfo.cs" />
     <Compile Include="Parser.cs" />

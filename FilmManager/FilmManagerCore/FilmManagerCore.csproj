@@ -44,10 +44,14 @@
     <Compile Include="FilmManagerApplication.cs" />
     <Compile Include="Filters\FilmFilters.cs" />
     <Compile Include="Filters\FilterBase.cs" />
+    <Compile Include="LogBaseObserver.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="LoggerUnsubscriber.cs" />
     <Compile Include="Models\DbModelReflection.cs" />
     <Compile Include="Models\Editable.cs" />
     <Compile Include="Models\Film.cs" />
     <Compile Include="Models\Genre.cs" />
+    <Compile Include="Models\LogMessage.cs" />
     <Compile Include="Notifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

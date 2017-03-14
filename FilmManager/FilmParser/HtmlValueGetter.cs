@@ -12,6 +12,24 @@ namespace FilmParser
 {
     public static class HtmlValueGetter
     {
+        public static string[] GetValues(this HtmlValueGetterInfo getterInfo, string url)
+        {
+            return getterInfo.GetValues(CreateDocument(url));
+        }
+
+        public static string[] GetValues(this HtmlValueGetterInfo getterInfo, HtmlDocument document)
+        {
+            var listElements = document.DocumentNode.SelectNodes(getterInfo.ElementSearchingString);
+            IEnumerable<string> listValues = null;
+            if (!string.IsNullOrWhiteSpace(getterInfo.Attribute))
+                listValues = listElements.Select(e => e.Attributes[getterInfo.Attribute].Value);
+            else
+                listValues = listElements.Select(e => e.InnerText);
+            if (getterInfo.UseRegex)
+                listValues = listValues.Select(e => Regex.Match(e, getterInfo.RegexMatch).Value);
+            return listValues.ToArray();
+        }
+
         public static string GetValue(HtmlDocument document, HtmlValueGetterInfo getterInfo)
         {
             var element = document.DocumentNode.SelectNodes(getterInfo.ElementSearchingString).First();
@@ -23,6 +41,16 @@ namespace FilmParser
             if (getterInfo.UseRegex)
                 elementValue = Regex.Match(elementValue, getterInfo.RegexMatch).Value;
             return elementValue;
+        }
+
+        public static string GetValue(this HtmlValueGetterInfo getterInfo, string url)
+        {
+            return getterInfo.GetValue(CreateDocument(url));
+        }
+
+        public static string GetValue(this HtmlValueGetterInfo getterInfo, HtmlDocument document)
+        {
+            return GetValue(document, getterInfo);
         }
 
         public static string GetValue(string url, HtmlValueGetterInfo getterInfo)

@@ -7,33 +7,21 @@ using FilmManagerCore.Models;
 
 namespace FilmManagerCore
 {
-    public class LogBaseObserver : IObserver<LogMessage>
+    public abstract class LogBaseObserver : IObserver<LogMessage>
     {
         public List<string> LogTypes { get; }
 
-        public LogBaseObserver(string[] logTypes)
+        protected LogBaseObserver(string[] logTypes)
         {
             LogTypes = new List<string>(logTypes);
         }
 
-        public LogBaseObserver() : this(new string[0])
-        {
+        protected LogBaseObserver() : this(new string[0]) { }
 
-        }
+        public abstract void OnCompleted();
 
-        public void OnCompleted()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void OnError(Exception error);
 
-        public void OnError(Exception error)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnNext(LogMessage value)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void OnNext(LogMessage value);
     }
 }

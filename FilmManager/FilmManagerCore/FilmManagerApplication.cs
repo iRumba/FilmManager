@@ -22,18 +22,7 @@ namespace FilmManagerCore
             Films = new List<Film>();
             PageCount = 1;
             ItemsPerPage = 25;
-            //_filmDataAdapter.AddFilm
-            //    (
-            //    new FilmDataLayer.Models.Film
-            //    {
-            //        LocalName = "qwe",
-            //        OriginalName = "asd",
-            //        Genres = new List<FilmDataLayer.Models.Genre>
-            //        {
-            //            new FilmDataLayer.Models.Genre {Name="Horror" }
-            //        }
-            //    }
-            //    );
+            Logger = new Logger();
         }
 
         public FilmFilters Filters { get; set; }
@@ -44,7 +33,7 @@ namespace FilmManagerCore
         {
             get
             {
-                return _filmDataAdapter.GetFilmGenres(true).Select(g => new Genre(g)).ToList();// DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Genre, Genre>(g)).ToList();
+                return _filmDataAdapter.GetFilmGenres(true).Select(g => new Genre(g)).ToList();
             }
         }
 
@@ -52,7 +41,7 @@ namespace FilmManagerCore
         {
             get
             {
-                return _filmDataAdapter.GetFilmGenres(false).Select(g => new Genre(g)).ToList(); //g => DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Genre, Genre>(g)).ToList();
+                return _filmDataAdapter.GetFilmGenres(false).Select(g => new Genre(g)).ToList();
             }
         }
 
@@ -68,6 +57,8 @@ namespace FilmManagerCore
         public int PageCount { get; set; }
         public int CurrentPage { get; set; }
         public int TotalCount { get; set; }
+
+        public Logger Logger { get; }
 
         public void Refresh()
         {
@@ -89,25 +80,16 @@ namespace FilmManagerCore
                     query.AddFilter(f => f.GlobalRating >= Filters.Rating.Value);
                 if (Filters.SelfRating.HasValue)
                     query.AddFilter(f => f.SelfRating == Filters.SelfRating.Value);
-                //if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
-                //    query.AddFilter(f => f.LocalName.Contains(Filters.TextFilter) ||
-                //    f.OriginalName.Contains(Filters.TextFilter) ||
-                //    f.Description.Contains(Filters.TextFilter));
                 if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
                     query.AddFilter(f => f.LocalName.ToUpper().Contains(Filters.TextFilter.ToUpper()) ||
                     f.OriginalName.ToUpper().Contains(Filters.TextFilter.ToUpper()) ||
                     f.Description.ToUpper().Contains(Filters.TextFilter.ToUpper()));
-                //if (!string.IsNullOrWhiteSpace(Filters.TextFilter))
-                //    query.AddFilter(f => f.LocalName.IndexOf(str,StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                //    f.OriginalName.ToUpper().Contains(str) ||
-                //    f.Description.ToUpper().Contains(str));
                 if (Filters.Year.HasValue)
                     query.AddFilter(f => f.Year == Filters.Year.Value);
 
                 query.AddOrder(f => f.FilmId);
 
                 TotalCount = query.TotalCount;
-                //CurrentPage = query.CurrentPage.Value;
 
                 List<Infrastructure.Models.Film> res = null;
                 if (ItemsPerPage > 0 && CurrentPage > 0)
@@ -121,14 +103,12 @@ namespace FilmManagerCore
                     
                 else
                     res = query.GetResult().ToList();
-                //query.SetPaginate(ItemsPerPage, CurrentPage);
 
-                var results = res.Select(f => new Film(f)).ToList();// DbToAppModelsConverter.ConvertFromDb<FilmDataLayer.Models.Film, Film>(f)).ToList();
+                var results = res.Select(f => new Film(f)).ToList();
                 foreach(var film in results)
                     film.Changed += Film_Changed;
-                    //film.SelfRatingChanged += Film_SelfRatingChanged;
-                Films = results;
 
+                Films = results;
             }
         }
 
@@ -147,30 +127,10 @@ namespace FilmManagerCore
             await Task.Run((Action)Refresh);
         }
 
-        //public void AddOrUpdateFilm(Film film)
-        //{
-        //    _filmDataAdapter.AddOrUpdateFilms(DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(film));
-        //}
-
-        //public void AddFilm(Film film)
-        //{
-        //    _filmDataAdapter.AddOrUpdateFilms(DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(film));
-        //}
-
-        //public async Task AddFilmAsync(Film film)
-        //{
-        //    await Task.Run(() => { AddFilm(film); });
-        //}
-
         public void AddOrUpdateFilms(params Film[] films)
         {
-            _filmDataAdapter.AddOrUpdateFilms(films.Select(f => f.FillModel()).ToArray());// DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(f)).ToArray()); 
+            _filmDataAdapter.AddOrUpdateFilms(films.Select(f => f.FillModel()).ToArray());
         }
-
-        //public async Task AddOrUpdateFilmAsync(Film film)
-        //{
-        //    await Task.Run(() => { AddOrUpdateFilm(film); });
-        //}
 
         public async Task AddOrUpdateFilmsAsync(params Film[] films)
         {
@@ -179,7 +139,7 @@ namespace FilmManagerCore
 
         public void RemoveFilms(params Film[] films)
         {
-            _filmDataAdapter.RemoveFilms(films.Select(f => f.Source).ToArray());//f => DbToAppModelsConverter.ConvertFromDb<Film, FilmDataLayer.Models.Film>(f)).ToArray());
+            _filmDataAdapter.RemoveFilms(films.Select(f => f.Source).ToArray());
         }
 
         public async Task RemoveFilmsAsync(params Film[] films)

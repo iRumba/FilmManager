@@ -85,6 +85,7 @@
     <Compile Include="ViewModels\FilterSet.cs" />
     <Compile Include="ViewModels\GenreVm.cs" />
     <Compile Include="ViewModels\ImageVm.cs" />
+    <Compile Include="ViewModels\LogReaderVm.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MainVmAdditionalData.cs" />
     <Compile Include="ViewModels\ModelReflection.cs" />

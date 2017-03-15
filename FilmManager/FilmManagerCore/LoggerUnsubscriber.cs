@@ -20,7 +20,7 @@ namespace FilmManagerCore
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _logger.Unsubscribe(_observer);
         }
     }
 }

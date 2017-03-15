@@ -58,7 +58,10 @@ namespace FilmManagerCore
         /// <returns></returns>
         IEnumerable<IObserver<LogMessage>> GetConcreteObservers(LogMessage message)
         {
-            return _observers.Where(o => (o as LogBaseObserver)?.LogTypes?.Contains(message.Type) ?? true || (o as LogBaseObserver).LogTypes.Count == 0);
+            //return _observers.Where(o => (o as ILogObserver)?.GetLogTypes()?.Contains(message.Type) ?? true || (o as ILogObserver).GetLogTypes().Count() == 0);
+            return _observers.Where(o => ((o as ILogObserver)?.IsUniversal ?? true) ||
+            ((o as ILogObserver).GetLogTypes()?.Contains(message.Type) ?? true) ||
+            (o as ILogObserver).GetLogTypes().Count() == 0);
         }
     }
 }

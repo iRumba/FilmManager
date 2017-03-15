@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FilmDataLayer;
 using FilmManagerCore.Filters;
 using FilmManagerCore.Models;
+using FilmParser;
 
 namespace FilmManagerCore
 {
@@ -23,7 +24,21 @@ namespace FilmManagerCore
             PageCount = 1;
             ItemsPerPage = 25;
             Logger = new Logger();
+            Parsers = new ParsersCollection();
+            var parser = new Parser();
+            parser.BaseUrl = "https://www.kinopoisk.ru/";
+            parser.FilmLists.Add(new FilmListInfo
+            {
+                Name = "Топ 250",
+                Url = "%host%/top/",
+                Films = new HtmlValueGetterInfo { }
+            });
+
+            Parsers.Add(parser);
+            Parsers.Save("parsersConfig.xml");
         }
+
+        public ParsersCollection Parsers { get; }
 
         public FilmFilters Filters { get; set; }
 

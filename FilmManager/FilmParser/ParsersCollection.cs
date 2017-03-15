@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace FilmParser
 {
@@ -14,6 +16,12 @@ namespace FilmParser
         public ParsersCollection()
         {
             _items = new List<Parser>();
+        }
+
+        public ParsersCollection(IEnumerable<Parser> parsers) : this()
+        {
+            foreach (var parser in parsers)
+                Add(parser);
         }
 
         public int Count
@@ -85,6 +93,22 @@ namespace FilmParser
             return null;
         }
 
+        public void Save(string fileName)
+        {
+            var serializer = new XmlSerializer(typeof(List<Parser>));
+            using(var stream = new FileStream(fileName, FileMode.Create))
+            {
+                serializer.Serialize(stream, _items);
+            }
+        }
 
+        public void Load(string fileName)
+        {
+            var serializer = new XmlSerializer(typeof(List<Parser>));
+            using(var stream = new FileStream(fileName, FileMode.Open))
+            {
+                _items = (List<Parser>)serializer.Deserialize(stream);
+            }
+        }
     }
 }

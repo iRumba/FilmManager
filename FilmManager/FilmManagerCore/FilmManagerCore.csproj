@@ -61,6 +61,10 @@
       <Project>{c875f646-b097-42ac-86ef-142a4898a93f}</Project>
       <Name>FilmDataLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FilmParser\FilmParser.csproj">
+      <Project>{3F0719EA-BBD4-4002-BDCA-5B5541C575CC}</Project>
+      <Name>FilmParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
       <Project>{1fae3cab-177f-478a-a294-e46fb819cdbe}</Project>
       <Name>Infrastructure</Name>

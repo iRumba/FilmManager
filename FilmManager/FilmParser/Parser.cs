@@ -12,13 +12,19 @@ namespace FilmParser
         public event EventHandler<FilmsGettingEventArgs> FilmListParsed;
         public event EventHandler<FilmsGettingErrorEventArgs> FilmListParsingError;
 
+        public Parser()
+        {
+            Film = new FilmInfo();
+            FilmLists = new List<FilmListInfo>();
+        }
+
         public string Name { get; set; }
 
         public string BaseUrl { get; set; }
 
-        public FilmInfo Film { get; set; }
+        public FilmInfo Film { get; }
 
-        public List<FilmListInfo> FilmLists { get; set; }
+        public List<FilmListInfo> FilmLists { get; }
 
         public Film ParseFilm(string url)
         {

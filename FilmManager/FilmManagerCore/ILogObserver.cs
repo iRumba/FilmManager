@@ -10,6 +10,7 @@ namespace FilmManagerCore
     public interface ILogObserver : IObserver<LogMessage>
     {
         bool IsUniversal { get; }
+        bool IsSwitchedOn { get; set; }
         IEnumerable<string> GetLogTypes();
     }
 }

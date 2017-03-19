@@ -12,6 +12,7 @@ namespace FilmManager.ViewModels
     public class LogReaderVm : Notifier, ILogObserver
     {
         LogMessage _lastMessage;
+        bool _isSwitchedOn;
 
         public ObservableCollection<LogMessage> Messages { get; }
 
@@ -26,6 +27,7 @@ namespace FilmManager.ViewModels
         public LogReaderVm()
         {
             Messages = new ObservableCollection<LogMessage>();
+            IsSwitchedOn = true;
         }
 
         public LogMessage LastMessage
@@ -41,6 +43,23 @@ namespace FilmManager.ViewModels
                 {
                     _lastMessage = value;
                     OnPropertyChanged(nameof(LastMessage));
+                }
+            }
+        }
+
+        public bool IsSwitchedOn
+        {
+            get
+            {
+                return _isSwitchedOn;
+            }
+
+            set
+            {
+                if (_isSwitchedOn != value)
+                {
+                    _isSwitchedOn = value;
+                    OnPropertyChanged(nameof(_isSwitchedOn));
                 }
             }
         }

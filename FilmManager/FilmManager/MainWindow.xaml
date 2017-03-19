@@ -129,6 +129,30 @@
                     </mat:Card>
                 </DockPanel>
             </StackPanel>
+
+            <StatusBar DockPanel.Dock="Bottom">
+                <ContentControl DataContext="{Binding Logs}" Content="{Binding LastMessage}">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LastMessage}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                    <ContentControl.ContentTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Type}"/>:
+                                <Hyperlink><Run Text="{Binding Message}"/></Hyperlink>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ContentControl.ContentTemplate>
+                </ContentControl>
+
+            </StatusBar>
             
             <mat:Card Margin="5" DockPanel.Dock="Bottom" Padding="5">
                 <WrapPanel>

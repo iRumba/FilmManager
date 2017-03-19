@@ -30,7 +30,7 @@ namespace FilmDataLayer.Contexts
             SQLiteFunction.RegisterFunction(typeof(SqliteCharindexFunction));
             SQLiteFunction.RegisterFunction(typeof(SqliteLowerFunction));
             SQLiteFunction.RegisterFunction(typeof(SqliteUpperFunction));
-            //Database.SetInitializer<FilmsContext>(null);
+            Database.SetInitializer<FilmsContext>(null);
 
             //var conf = new SqliteDbConfiguration();
         }

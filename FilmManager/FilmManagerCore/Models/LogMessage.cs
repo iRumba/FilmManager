@@ -8,7 +8,11 @@ namespace FilmManagerCore.Models
 {
     public class LogMessage
     {
-        public DateTime Date { get; set; }
+        public LogMessage()
+        {
+            Date = DateTime.Now;
+        }
+        public DateTime Date { get; }
         public string Type { get; set; }
         public string Message { get; set; }
     }

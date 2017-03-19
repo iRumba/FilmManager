@@ -43,7 +43,6 @@ namespace FilmManager.ViewModels
             RemoveFilmCommand = new RoutedCommand();
 
             _source = new FilmManagerApplication(ConfigurationManager.AppSettings["connectionString"]);
-            //AdditionalData = new MainVmAdditionalData();
             Filters = new FilmFiltersSet();
             Filters.SelfRatings.SetData(new int[] { 1, 2, 3, 4, 5 });
             Filters.Ratings.SetData(new float[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
@@ -53,7 +52,11 @@ namespace FilmManager.ViewModels
             Filters.RatingChanged += Filters_RatingChanged;
             CurrentPage = 1;
             ImageSource = new ImageVm();
+            Logs = new LogReaderVm();
+            _source.Logger.Subscribe(Logs);
         }
+
+        public LogReaderVm Logs { get; }
 
         public string SearchText
         {

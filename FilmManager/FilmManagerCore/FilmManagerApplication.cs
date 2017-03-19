@@ -25,17 +25,24 @@ namespace FilmManagerCore
             ItemsPerPage = 25;
             Logger = new Logger();
             Parsers = new ParsersCollection();
-            var parser = new Parser();
-            parser.BaseUrl = "https://www.kinopoisk.ru/";
-            parser.FilmLists.Add(new FilmListInfo
+            Parsers.Load("parsersConfig.xml");
+            Parsers.First().FilmListParsed += (o, e) =>
             {
-                Name = "Топ 250",
-                Url = "%host%/top/",
-                Films = new HtmlValueGetterInfo { }
-            });
+                foreach (var url in e.FilmUrls)
+                    Console.WriteLine(url);
+            };
+            Parsers.First().StartFilmGettingAsync().ConfigureAwait(false);
+            //var parser = new Parser();
+            //parser.BaseUrl = "https://www.kinopoisk.ru/";
+            //parser.FilmLists.Add(new FilmListInfo
+            //{
+            //    Name = "Топ 250",
+            //    Url = "%host%/top/",
+            //    Films = new HtmlValueGetterInfo { }
+            //});
 
-            Parsers.Add(parser);
-            Parsers.Save("parsersConfig.xml");
+            //Parsers.Add(parser);
+            //Parsers.Save("parsersConfig.xml");
         }
 
         public ParsersCollection Parsers { get; }
@@ -145,6 +152,7 @@ namespace FilmManagerCore
         public void AddOrUpdateFilms(params Film[] films)
         {
             _filmDataAdapter.AddOrUpdateFilms(films.Select(f => f.FillModel()).ToArray());
+            Logger.AddMessage(new LogMessage { Message = "Фильмы отредактированы", Type = "Info" });
         }
 
         public async Task AddOrUpdateFilmsAsync(params Film[] films)

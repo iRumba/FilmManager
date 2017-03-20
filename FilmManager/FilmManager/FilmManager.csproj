@@ -89,6 +89,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MainVmAdditionalData.cs" />
     <Compile Include="ViewModels\ModelReflection.cs" />
+    <Compile Include="ViewModels\ParsersVm.cs" />
     <Compile Include="Wnd_FilmEditing.xaml.cs">
       <DependentUpon>Wnd_FilmEditing.xaml</DependentUpon>
     </Compile>

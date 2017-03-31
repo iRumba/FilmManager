@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace FilmParser
+namespace FilmManagerCore.Parsing
 {
     public class ParsersCollection : ICollection<Parser>
     {

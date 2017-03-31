@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 
-namespace FilmParser
+namespace FilmManagerCore.Parsing
 {
     public static class HtmlValueGetter
     {

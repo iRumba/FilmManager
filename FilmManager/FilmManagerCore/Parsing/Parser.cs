@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Models;
 
-namespace FilmParser
+namespace FilmManagerCore.Parsing
 {
     public class Parser
     {

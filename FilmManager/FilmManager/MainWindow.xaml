@@ -99,8 +99,11 @@
                             <Button Command="{Binding NewFilmCommand}">
                                 <mat:PackIcon Kind="Plus" VerticalAlignment="Stretch" Width="24" Height="24"/>
                             </Button>
-                            <Button Command="{Binding EditFilmCommand}" CommandParameter="{Binding SelectedFilm}" >
+                            <!--<Button Command="{Binding EditFilmCommand}" CommandParameter="{Binding SelectedFilm}" >
                                 <mat:PackIcon Kind="LeadPencil" VerticalAlignment="Stretch" Width="24" Height="24"/>
+                            </Button>-->
+                            <Button Command="{Binding OpenParsersCommand}" >
+                                <mat:PackIcon Kind="Download" VerticalAlignment="Stretch" Width="24" Height="24"/>
                             </Button>
                         </StackPanel>
                     </mat:Card>

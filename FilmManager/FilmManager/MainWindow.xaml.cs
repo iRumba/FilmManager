@@ -60,6 +60,10 @@ namespace FilmManager
             removeFilm.CanExecute += RemoveFilm_CanExecute;
             removeFilm.Executed += RemoveFilm_Executed;
 
+            var openParsers = new CommandBinding(Source.OpenParsersCommand);
+            openParsers.CanExecute += OpenParsers_CanExecute;
+            openParsers.Executed += OpenParsers_Executed;
+
             CommandManager.RegisterClassCommandBinding(GetType(), refreshCommand);
             CommandManager.RegisterClassCommandBinding(GetType(), searchCommand);
             CommandManager.RegisterClassCommandBinding(GetType(), clearFilters);
@@ -68,6 +72,19 @@ namespace FilmManager
             CommandManager.RegisterClassCommandBinding(GetType(), showImage);
             CommandManager.RegisterClassCommandBinding(GetType(), hideImage);
             CommandManager.RegisterClassCommandBinding(GetType(), removeFilm);
+            CommandManager.RegisterClassCommandBinding(GetType(), openParsers);
+        }
+
+        void OpenParsers_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            var parsers = new ParsersManager(new ParsersVm(Source._source.Parsers));
+            parsers.Topmost = true;
+            parsers.Show();
+        }
+
+        void OpenParsers_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
         }
 
         async void RemoveFilm_Executed(object sender, ExecutedRoutedEventArgs e)

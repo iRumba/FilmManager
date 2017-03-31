@@ -73,6 +73,9 @@
     <Compile Include="PageCounter.xaml.cs">
       <DependentUpon>PageCounter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ParsersManager.xaml.cs">
+      <DependentUpon>ParsersManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TagControl.xaml.cs">
       <DependentUpon>TagControl.xaml</DependentUpon>
     </Compile>
@@ -90,6 +93,7 @@
     <Compile Include="ViewModels\MainVmAdditionalData.cs" />
     <Compile Include="ViewModels\ModelReflection.cs" />
     <Compile Include="ViewModels\ParsersVm.cs" />
+    <Compile Include="ViewModels\ParserVm.cs" />
     <Compile Include="Wnd_FilmEditing.xaml.cs">
       <DependentUpon>Wnd_FilmEditing.xaml</DependentUpon>
     </Compile>
@@ -106,6 +110,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PageCounter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ParsersManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

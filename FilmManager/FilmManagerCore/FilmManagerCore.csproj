@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -54,6 +58,13 @@
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\LogMessage.cs" />
     <Compile Include="Notifier.cs" />
+    <Compile Include="Parsing\EnvironmentVariableManager.cs" />
+    <Compile Include="Parsing\FilmInfo.cs" />
+    <Compile Include="Parsing\FilmListInfo.cs" />
+    <Compile Include="Parsing\HtmlValueGetter.cs" />
+    <Compile Include="Parsing\HtmlValueGetterInfo.cs" />
+    <Compile Include="Parsing\Parser.cs" />
+    <Compile Include="Parsing\ParsersCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Serializers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

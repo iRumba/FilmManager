@@ -13,7 +13,7 @@ namespace FilmManager.ViewModels
 {
     public class MainViewModel : Notifier
     {
-        FilmManagerApplication _source;
+        internal FilmManagerApplication _source;
 
         FilmVm _selectedFilm;
 
@@ -29,7 +29,7 @@ namespace FilmManager.ViewModels
         public RoutedCommand RemoveFilmCommand { get; set; }
         public RoutedCommand ShowImageCommand { get; set; }
         public RoutedCommand HideImageCommand { get; set; }
-
+        public RoutedCommand OpenParsersCommand { get; set; }
 
         public MainViewModel()
         {
@@ -41,6 +41,7 @@ namespace FilmManager.ViewModels
             ShowImageCommand = new RoutedCommand();
             HideImageCommand = new RoutedCommand();
             RemoveFilmCommand = new RoutedCommand();
+            OpenParsersCommand = new RoutedCommand();
 
             _source = new FilmManagerApplication(ConfigurationManager.AppSettings["connectionString"]);
             Filters = new FilmFiltersSet();
